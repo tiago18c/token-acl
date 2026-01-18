@@ -27,14 +27,14 @@ import {
   type ReadonlyUint8Array,
   type TransactionSigner,
   type WritableAccount,
-} from '@solana/kit';
-import { findFlagAccountPda, findMintConfigPda } from '../pdas';
-import { TOKEN_ACL_PROGRAM_ADDRESS } from '../programs';
+} from "@solana/kit";
+import { findFlagAccountPda, findMintConfigPda } from "../pdas";
+import { TOKEN_ACL_PROGRAM_ADDRESS } from "../programs";
 import {
   expectAddress,
   getAccountMetaFactory,
   type ResolvedAccount,
-} from '../shared';
+} from "../shared";
 
 export const FREEZE_PERMISSIONLESS_DISCRIMINATOR = 7;
 
@@ -52,10 +52,10 @@ export type FreezePermissionlessInstruction<
   TAccountMintConfig extends string | AccountMeta<string> = string,
   TAccountTokenProgram extends
     | string
-    | AccountMeta<string> = 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb',
+    | AccountMeta<string> = "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
   TAccountSystemProgram extends
     | string
-    | AccountMeta<string> = '11111111111111111111111111111111',
+    | AccountMeta<string> = "11111111111111111111111111111111",
   TAccountGatingProgram extends string | AccountMeta<string> = string,
   TRemainingAccounts extends readonly AccountMeta<string>[] = [],
 > = Instruction<TProgram> &
@@ -100,16 +100,16 @@ export type FreezePermissionlessInstructionDataArgs = {};
 
 export function getFreezePermissionlessInstructionDataEncoder(): FixedSizeEncoder<FreezePermissionlessInstructionDataArgs> {
   return transformEncoder(
-    getStructEncoder([['discriminator', getU8Encoder()]]),
+    getStructEncoder([["discriminator", getU8Encoder()]]),
     (value) => ({
       ...value,
       discriminator: FREEZE_PERMISSIONLESS_DISCRIMINATOR,
-    })
+    }),
   );
 }
 
 export function getFreezePermissionlessInstructionDataDecoder(): FixedSizeDecoder<FreezePermissionlessInstructionData> {
-  return getStructDecoder([['discriminator', getU8Decoder()]]);
+  return getStructDecoder([["discriminator", getU8Decoder()]]);
 }
 
 export function getFreezePermissionlessInstructionDataCodec(): FixedSizeCodec<
@@ -118,7 +118,7 @@ export function getFreezePermissionlessInstructionDataCodec(): FixedSizeCodec<
 > {
   return combineCodec(
     getFreezePermissionlessInstructionDataEncoder(),
-    getFreezePermissionlessInstructionDataDecoder()
+    getFreezePermissionlessInstructionDataDecoder(),
   );
 }
 
@@ -167,7 +167,7 @@ export async function getFreezePermissionlessInstructionAsync<
     TAccountSystemProgram,
     TAccountGatingProgram
   >,
-  config?: { programAddress?: TProgramAddress }
+  config?: { programAddress?: TProgramAddress },
 ): Promise<
   FreezePermissionlessInstruction<
     TProgramAddress,
@@ -218,14 +218,14 @@ export async function getFreezePermissionlessInstructionAsync<
   }
   if (!accounts.tokenProgram.value) {
     accounts.tokenProgram.value =
-      'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb' as Address<'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'>;
+      "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb" as Address<"TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb">;
   }
   if (!accounts.systemProgram.value) {
     accounts.systemProgram.value =
-      '11111111111111111111111111111111' as Address<'11111111111111111111111111111111'>;
+      "11111111111111111111111111111111" as Address<"11111111111111111111111111111111">;
   }
 
-  const getAccountMeta = getAccountMetaFactory(programAddress, 'programId');
+  const getAccountMeta = getAccountMetaFactory(programAddress, "programId");
   return Object.freeze({
     accounts: [
       getAccountMeta(accounts.authority),
@@ -299,7 +299,7 @@ export function getFreezePermissionlessInstruction<
     TAccountSystemProgram,
     TAccountGatingProgram
   >,
-  config?: { programAddress?: TProgramAddress }
+  config?: { programAddress?: TProgramAddress },
 ): FreezePermissionlessInstruction<
   TProgramAddress,
   TAccountAuthority,
@@ -338,14 +338,14 @@ export function getFreezePermissionlessInstruction<
   // Resolve default values.
   if (!accounts.tokenProgram.value) {
     accounts.tokenProgram.value =
-      'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb' as Address<'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'>;
+      "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb" as Address<"TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb">;
   }
   if (!accounts.systemProgram.value) {
     accounts.systemProgram.value =
-      '11111111111111111111111111111111' as Address<'11111111111111111111111111111111'>;
+      "11111111111111111111111111111111" as Address<"11111111111111111111111111111111">;
   }
 
-  const getAccountMeta = getAccountMetaFactory(programAddress, 'programId');
+  const getAccountMeta = getAccountMetaFactory(programAddress, "programId");
   return Object.freeze({
     accounts: [
       getAccountMeta(accounts.authority),
@@ -399,11 +399,11 @@ export function parseFreezePermissionlessInstruction<
 >(
   instruction: Instruction<TProgram> &
     InstructionWithAccounts<TAccountMetas> &
-    InstructionWithData<ReadonlyUint8Array>
+    InstructionWithData<ReadonlyUint8Array>,
 ): ParsedFreezePermissionlessInstruction<TProgram, TAccountMetas> {
   if (instruction.accounts.length < 9) {
     // TODO: Coded error.
-    throw new Error('Not enough accounts');
+    throw new Error("Not enough accounts");
   }
   let accountIndex = 0;
   const getNextAccount = () => {
@@ -425,7 +425,7 @@ export function parseFreezePermissionlessInstruction<
       gatingProgram: getNextAccount(),
     },
     data: getFreezePermissionlessInstructionDataDecoder().decode(
-      instruction.data
+      instruction.data,
     ),
   };
 }

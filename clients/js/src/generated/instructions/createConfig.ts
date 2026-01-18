@@ -29,14 +29,14 @@ import {
   type ReadonlyUint8Array,
   type TransactionSigner,
   type WritableAccount,
-} from '@solana/kit';
-import { findMintConfigPda } from '../pdas';
-import { TOKEN_ACL_PROGRAM_ADDRESS } from '../programs';
+} from "@solana/kit";
+import { findMintConfigPda } from "../pdas";
+import { TOKEN_ACL_PROGRAM_ADDRESS } from "../programs";
 import {
   expectAddress,
   getAccountMetaFactory,
   type ResolvedAccount,
-} from '../shared';
+} from "../shared";
 
 export const CREATE_CONFIG_DISCRIMINATOR = 0;
 
@@ -52,10 +52,10 @@ export type CreateConfigInstruction<
   TAccountMintConfig extends string | AccountMeta<string> = string,
   TAccountSystemProgram extends
     | string
-    | AccountMeta<string> = '11111111111111111111111111111111',
+    | AccountMeta<string> = "11111111111111111111111111111111",
   TAccountTokenProgram extends
     | string
-    | AccountMeta<string> = 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb',
+    | AccountMeta<string> = "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
   TRemainingAccounts extends readonly AccountMeta<string>[] = [],
 > = Instruction<TProgram> &
   InstructionWithData<ReadonlyUint8Array> &
@@ -94,17 +94,17 @@ export type CreateConfigInstructionDataArgs = { gatingProgram: Address };
 export function getCreateConfigInstructionDataEncoder(): FixedSizeEncoder<CreateConfigInstructionDataArgs> {
   return transformEncoder(
     getStructEncoder([
-      ['discriminator', getU8Encoder()],
-      ['gatingProgram', getAddressEncoder()],
+      ["discriminator", getU8Encoder()],
+      ["gatingProgram", getAddressEncoder()],
     ]),
-    (value) => ({ ...value, discriminator: CREATE_CONFIG_DISCRIMINATOR })
+    (value) => ({ ...value, discriminator: CREATE_CONFIG_DISCRIMINATOR }),
   );
 }
 
 export function getCreateConfigInstructionDataDecoder(): FixedSizeDecoder<CreateConfigInstructionData> {
   return getStructDecoder([
-    ['discriminator', getU8Decoder()],
-    ['gatingProgram', getAddressDecoder()],
+    ["discriminator", getU8Decoder()],
+    ["gatingProgram", getAddressDecoder()],
   ]);
 }
 
@@ -114,7 +114,7 @@ export function getCreateConfigInstructionDataCodec(): FixedSizeCodec<
 > {
   return combineCodec(
     getCreateConfigInstructionDataEncoder(),
-    getCreateConfigInstructionDataDecoder()
+    getCreateConfigInstructionDataDecoder(),
   );
 }
 
@@ -132,7 +132,7 @@ export type CreateConfigAsyncInput<
   mintConfig?: Address<TAccountMintConfig>;
   systemProgram?: Address<TAccountSystemProgram>;
   tokenProgram?: Address<TAccountTokenProgram>;
-  gatingProgram: CreateConfigInstructionDataArgs['gatingProgram'];
+  gatingProgram: CreateConfigInstructionDataArgs["gatingProgram"];
 };
 
 export async function getCreateConfigInstructionAsync<
@@ -152,7 +152,7 @@ export async function getCreateConfigInstructionAsync<
     TAccountSystemProgram,
     TAccountTokenProgram
   >,
-  config?: { programAddress?: TProgramAddress }
+  config?: { programAddress?: TProgramAddress },
 ): Promise<
   CreateConfigInstruction<
     TProgramAddress,
@@ -192,14 +192,14 @@ export async function getCreateConfigInstructionAsync<
   }
   if (!accounts.systemProgram.value) {
     accounts.systemProgram.value =
-      '11111111111111111111111111111111' as Address<'11111111111111111111111111111111'>;
+      "11111111111111111111111111111111" as Address<"11111111111111111111111111111111">;
   }
   if (!accounts.tokenProgram.value) {
     accounts.tokenProgram.value =
-      'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb' as Address<'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'>;
+      "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb" as Address<"TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb">;
   }
 
-  const getAccountMeta = getAccountMetaFactory(programAddress, 'programId');
+  const getAccountMeta = getAccountMetaFactory(programAddress, "programId");
   return Object.freeze({
     accounts: [
       getAccountMeta(accounts.payer),
@@ -210,7 +210,7 @@ export async function getCreateConfigInstructionAsync<
       getAccountMeta(accounts.tokenProgram),
     ],
     data: getCreateConfigInstructionDataEncoder().encode(
-      args as CreateConfigInstructionDataArgs
+      args as CreateConfigInstructionDataArgs,
     ),
     programAddress,
   } as CreateConfigInstruction<
@@ -238,7 +238,7 @@ export type CreateConfigInput<
   mintConfig: Address<TAccountMintConfig>;
   systemProgram?: Address<TAccountSystemProgram>;
   tokenProgram?: Address<TAccountTokenProgram>;
-  gatingProgram: CreateConfigInstructionDataArgs['gatingProgram'];
+  gatingProgram: CreateConfigInstructionDataArgs["gatingProgram"];
 };
 
 export function getCreateConfigInstruction<
@@ -258,7 +258,7 @@ export function getCreateConfigInstruction<
     TAccountSystemProgram,
     TAccountTokenProgram
   >,
-  config?: { programAddress?: TProgramAddress }
+  config?: { programAddress?: TProgramAddress },
 ): CreateConfigInstruction<
   TProgramAddress,
   TAccountPayer,
@@ -291,14 +291,14 @@ export function getCreateConfigInstruction<
   // Resolve default values.
   if (!accounts.systemProgram.value) {
     accounts.systemProgram.value =
-      '11111111111111111111111111111111' as Address<'11111111111111111111111111111111'>;
+      "11111111111111111111111111111111" as Address<"11111111111111111111111111111111">;
   }
   if (!accounts.tokenProgram.value) {
     accounts.tokenProgram.value =
-      'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb' as Address<'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'>;
+      "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb" as Address<"TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb">;
   }
 
-  const getAccountMeta = getAccountMetaFactory(programAddress, 'programId');
+  const getAccountMeta = getAccountMetaFactory(programAddress, "programId");
   return Object.freeze({
     accounts: [
       getAccountMeta(accounts.payer),
@@ -309,7 +309,7 @@ export function getCreateConfigInstruction<
       getAccountMeta(accounts.tokenProgram),
     ],
     data: getCreateConfigInstructionDataEncoder().encode(
-      args as CreateConfigInstructionDataArgs
+      args as CreateConfigInstructionDataArgs,
     ),
     programAddress,
   } as CreateConfigInstruction<
@@ -345,11 +345,11 @@ export function parseCreateConfigInstruction<
 >(
   instruction: Instruction<TProgram> &
     InstructionWithAccounts<TAccountMetas> &
-    InstructionWithData<ReadonlyUint8Array>
+    InstructionWithData<ReadonlyUint8Array>,
 ): ParsedCreateConfigInstruction<TProgram, TAccountMetas> {
   if (instruction.accounts.length < 6) {
     // TODO: Coded error.
-    throw new Error('Not enough accounts');
+    throw new Error("Not enough accounts");
   }
   let accountIndex = 0;
   const getNextAccount = () => {

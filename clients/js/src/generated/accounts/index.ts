@@ -6,5 +6,5 @@
  * @see https://github.com/codama-idl/codama
  */
 
-export * from './flagAccount';
-export * from './mintConfig';
+export * from "./flagAccount";
+export * from "./mintConfig";

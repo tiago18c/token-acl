@@ -71,7 +71,7 @@ impl InitializeExtraMetas<'_> {
         let metas: Vec<ExtraAccountMeta> = vec![
             // [6] associated token program
             ExtraAccountMeta::new_with_pubkey(
-                &spl_associated_token_account_client::program::ID,
+                &spl_associated_token_account_interface::program::ID,
                 false,
                 false,
             )?,
@@ -112,7 +112,7 @@ impl InitializeExtraMetas<'_> {
         let metas2: Vec<ExtraAccountMeta> = vec![
             // [6] associated token program
             ExtraAccountMeta::new_with_pubkey(
-                &spl_associated_token_account_client::program::ID,
+                &spl_associated_token_account_interface::program::ID,
                 false,
                 false,
             )?,

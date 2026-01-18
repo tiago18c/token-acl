@@ -117,7 +117,7 @@ impl ThawPermissionless<'_> {
 
         // clean up flag account
         self.flag_account.data.borrow_mut()[0] = 0;
-        self.flag_account.realloc(0, false)?;
+        self.flag_account.resize(0)?;
         self.flag_account.assign(&Pubkey::default());
         **self.authority.try_borrow_mut_lamports()? += self.flag_account.lamports();
         **self.flag_account.try_borrow_mut_lamports()? = 0;

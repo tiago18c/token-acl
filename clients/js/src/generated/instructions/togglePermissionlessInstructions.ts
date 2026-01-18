@@ -28,15 +28,15 @@ import {
   type ReadonlyUint8Array,
   type TransactionSigner,
   type WritableAccount,
-} from '@solana/kit';
-import { TOKEN_ACL_PROGRAM_ADDRESS } from '../programs';
-import { getAccountMetaFactory, type ResolvedAccount } from '../shared';
+} from "@solana/kit";
+import { TOKEN_ACL_PROGRAM_ADDRESS } from "../programs";
+import { getAccountMetaFactory, type ResolvedAccount } from "../shared";
 
 export const TOGGLE_PERMISSIONLESS_INSTRUCTIONS_DISCRIMINATOR = 8;
 
 export function getTogglePermissionlessInstructionsDiscriminatorBytes() {
   return getU8Encoder().encode(
-    TOGGLE_PERMISSIONLESS_INSTRUCTIONS_DISCRIMINATOR
+    TOGGLE_PERMISSIONLESS_INSTRUCTIONS_DISCRIMINATOR,
   );
 }
 
@@ -74,22 +74,22 @@ export type TogglePermissionlessInstructionsInstructionDataArgs = {
 export function getTogglePermissionlessInstructionsInstructionDataEncoder(): FixedSizeEncoder<TogglePermissionlessInstructionsInstructionDataArgs> {
   return transformEncoder(
     getStructEncoder([
-      ['discriminator', getU8Encoder()],
-      ['freezeEnabled', getBooleanEncoder()],
-      ['thawEnabled', getBooleanEncoder()],
+      ["discriminator", getU8Encoder()],
+      ["freezeEnabled", getBooleanEncoder()],
+      ["thawEnabled", getBooleanEncoder()],
     ]),
     (value) => ({
       ...value,
       discriminator: TOGGLE_PERMISSIONLESS_INSTRUCTIONS_DISCRIMINATOR,
-    })
+    }),
   );
 }
 
 export function getTogglePermissionlessInstructionsInstructionDataDecoder(): FixedSizeDecoder<TogglePermissionlessInstructionsInstructionData> {
   return getStructDecoder([
-    ['discriminator', getU8Decoder()],
-    ['freezeEnabled', getBooleanDecoder()],
-    ['thawEnabled', getBooleanDecoder()],
+    ["discriminator", getU8Decoder()],
+    ["freezeEnabled", getBooleanDecoder()],
+    ["thawEnabled", getBooleanDecoder()],
   ]);
 }
 
@@ -99,7 +99,7 @@ export function getTogglePermissionlessInstructionsInstructionDataCodec(): Fixed
 > {
   return combineCodec(
     getTogglePermissionlessInstructionsInstructionDataEncoder(),
-    getTogglePermissionlessInstructionsInstructionDataDecoder()
+    getTogglePermissionlessInstructionsInstructionDataDecoder(),
   );
 }
 
@@ -109,8 +109,8 @@ export type TogglePermissionlessInstructionsInput<
 > = {
   authority: TransactionSigner<TAccountAuthority>;
   mintConfig: Address<TAccountMintConfig>;
-  freezeEnabled: TogglePermissionlessInstructionsInstructionDataArgs['freezeEnabled'];
-  thawEnabled: TogglePermissionlessInstructionsInstructionDataArgs['thawEnabled'];
+  freezeEnabled: TogglePermissionlessInstructionsInstructionDataArgs["freezeEnabled"];
+  thawEnabled: TogglePermissionlessInstructionsInstructionDataArgs["thawEnabled"];
 };
 
 export function getTogglePermissionlessInstructionsInstruction<
@@ -122,7 +122,7 @@ export function getTogglePermissionlessInstructionsInstruction<
     TAccountAuthority,
     TAccountMintConfig
   >,
-  config?: { programAddress?: TProgramAddress }
+  config?: { programAddress?: TProgramAddress },
 ): TogglePermissionlessInstructionsInstruction<
   TProgramAddress,
   TAccountAuthority,
@@ -144,14 +144,14 @@ export function getTogglePermissionlessInstructionsInstruction<
   // Original args.
   const args = { ...input };
 
-  const getAccountMeta = getAccountMetaFactory(programAddress, 'programId');
+  const getAccountMeta = getAccountMetaFactory(programAddress, "programId");
   return Object.freeze({
     accounts: [
       getAccountMeta(accounts.authority),
       getAccountMeta(accounts.mintConfig),
     ],
     data: getTogglePermissionlessInstructionsInstructionDataEncoder().encode(
-      args as TogglePermissionlessInstructionsInstructionDataArgs
+      args as TogglePermissionlessInstructionsInstructionDataArgs,
     ),
     programAddress,
   } as TogglePermissionlessInstructionsInstruction<
@@ -179,11 +179,11 @@ export function parseTogglePermissionlessInstructionsInstruction<
 >(
   instruction: Instruction<TProgram> &
     InstructionWithAccounts<TAccountMetas> &
-    InstructionWithData<ReadonlyUint8Array>
+    InstructionWithData<ReadonlyUint8Array>,
 ): ParsedTogglePermissionlessInstructionsInstruction<TProgram, TAccountMetas> {
   if (instruction.accounts.length < 2) {
     // TODO: Coded error.
-    throw new Error('Not enough accounts');
+    throw new Error("Not enough accounts");
   }
   let accountIndex = 0;
   const getNextAccount = () => {
@@ -195,7 +195,7 @@ export function parseTogglePermissionlessInstructionsInstruction<
     programAddress: instruction.programAddress,
     accounts: { authority: getNextAccount(), mintConfig: getNextAccount() },
     data: getTogglePermissionlessInstructionsInstructionDataDecoder().decode(
-      instruction.data
+      instruction.data,
     ),
   };
 }

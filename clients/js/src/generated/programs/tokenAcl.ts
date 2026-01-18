@@ -11,7 +11,7 @@ import {
   getU8Encoder,
   type Address,
   type ReadonlyUint8Array,
-} from '@solana/kit';
+} from "@solana/kit";
 import {
   type ParsedCreateConfigInstruction,
   type ParsedDeleteConfigInstruction,
@@ -24,10 +24,10 @@ import {
   type ParsedThawPermissionlessIdempotentInstruction,
   type ParsedThawPermissionlessInstruction,
   type ParsedTogglePermissionlessInstructionsInstruction,
-} from '../instructions';
+} from "../instructions";
 
 export const TOKEN_ACL_PROGRAM_ADDRESS =
-  'TACLkU6CiCdkQN2MjoyDkVg2yAH9zkxiHDsiztQ52TP' as Address<'TACLkU6CiCdkQN2MjoyDkVg2yAH9zkxiHDsiztQ52TP'>;
+  "TACLkU6CiCdkQN2MjoyDkVg2yAH9zkxiHDsiztQ52TP" as Address<"TACLkU6CiCdkQN2MjoyDkVg2yAH9zkxiHDsiztQ52TP">;
 
 export enum TokenAclAccount {
   FlagAccount,
@@ -35,14 +35,14 @@ export enum TokenAclAccount {
 }
 
 export function identifyTokenAclAccount(
-  account: { data: ReadonlyUint8Array } | ReadonlyUint8Array
+  account: { data: ReadonlyUint8Array } | ReadonlyUint8Array,
 ): TokenAclAccount {
-  const data = 'data' in account ? account.data : account;
+  const data = "data" in account ? account.data : account;
   if (containsBytes(data, getU8Encoder().encode(1), 0)) {
     return TokenAclAccount.MintConfig;
   }
   throw new Error(
-    'The provided account could not be identified as a tokenAcl account.'
+    "The provided account could not be identified as a tokenAcl account.",
   );
 }
 
@@ -61,9 +61,9 @@ export enum TokenAclInstruction {
 }
 
 export function identifyTokenAclInstruction(
-  instruction: { data: ReadonlyUint8Array } | ReadonlyUint8Array
+  instruction: { data: ReadonlyUint8Array } | ReadonlyUint8Array,
 ): TokenAclInstruction {
-  const data = 'data' in instruction ? instruction.data : instruction;
+  const data = "data" in instruction ? instruction.data : instruction;
   if (containsBytes(data, getU8Encoder().encode(0), 0)) {
     return TokenAclInstruction.CreateConfig;
   }
@@ -98,12 +98,12 @@ export function identifyTokenAclInstruction(
     return TokenAclInstruction.TogglePermissionlessInstructions;
   }
   throw new Error(
-    'The provided instruction could not be identified as a tokenAcl instruction.'
+    "The provided instruction could not be identified as a tokenAcl instruction.",
   );
 }
 
 export type ParsedTokenAclInstruction<
-  TProgram extends string = 'TACLkU6CiCdkQN2MjoyDkVg2yAH9zkxiHDsiztQ52TP',
+  TProgram extends string = "TACLkU6CiCdkQN2MjoyDkVg2yAH9zkxiHDsiztQ52TP",
 > =
   | ({
       instructionType: TokenAclInstruction.CreateConfig;

@@ -11,8 +11,8 @@ import {
   type Address,
   type SOLANA_ERROR__INSTRUCTION_ERROR__CUSTOM,
   type SolanaError,
-} from '@solana/kit';
-import { TOKEN_ACL_PROGRAM_ADDRESS } from '../programs';
+} from "@solana/kit";
+import { TOKEN_ACL_PROGRAM_ADDRESS } from "../programs";
 
 /** InvalidAuthority: An invalid authority was provided */
 export const TOKEN_ACL_ERROR__INVALID_AUTHORITY = 0x0; // 0
@@ -45,7 +45,7 @@ export type TokenAclError =
   | typeof TOKEN_ACL_ERROR__PERMISSIONLESS_THAW_NOT_ENABLED;
 
 let tokenAclErrorMessages: Record<TokenAclError, string> | undefined;
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV !== "production") {
   tokenAclErrorMessages = {
     [TOKEN_ACL_ERROR__INVALID_AUTHORITY]: `An invalid authority was provided`,
     [TOKEN_ACL_ERROR__INVALID_GATING_PROGRAM]: `An invalid gating program was provided`,
@@ -60,11 +60,11 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 export function getTokenAclErrorMessage(code: TokenAclError): string {
-  if (process.env.NODE_ENV !== 'production') {
+  if (process.env.NODE_ENV !== "production") {
     return (tokenAclErrorMessages as Record<TokenAclError, string>)[code];
   }
 
-  return 'Error message not available in production bundles.';
+  return "Error message not available in production bundles.";
 }
 
 export function isTokenAclError<TProgramErrorCode extends TokenAclError>(
@@ -72,13 +72,13 @@ export function isTokenAclError<TProgramErrorCode extends TokenAclError>(
   transactionMessage: {
     instructions: Record<number, { programAddress: Address }>;
   },
-  code?: TProgramErrorCode
+  code?: TProgramErrorCode,
 ): error is SolanaError<typeof SOLANA_ERROR__INSTRUCTION_ERROR__CUSTOM> &
   Readonly<{ context: Readonly<{ code: TProgramErrorCode }> }> {
   return isProgramError<TProgramErrorCode>(
     error,
     transactionMessage,
     TOKEN_ACL_PROGRAM_ADDRESS,
-    code
+    code,
   );
 }

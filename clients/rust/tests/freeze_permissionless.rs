@@ -6,7 +6,7 @@ use solana_sdk::{
     signer::Signer,
     transaction::{Transaction, TransactionError},
 };
-use spl_associated_token_account_client::address::get_associated_token_address_with_program_id;
+use spl_associated_token_account_interface::address::get_associated_token_address_with_program_id;
 use spl_token_2022::{
     extension::StateWithExtensions,
     state::{Account, AccountState},

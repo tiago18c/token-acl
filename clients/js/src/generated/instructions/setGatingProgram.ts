@@ -28,9 +28,9 @@ import {
   type ReadonlyUint8Array,
   type TransactionSigner,
   type WritableAccount,
-} from '@solana/kit';
-import { TOKEN_ACL_PROGRAM_ADDRESS } from '../programs';
-import { getAccountMetaFactory, type ResolvedAccount } from '../shared';
+} from "@solana/kit";
+import { TOKEN_ACL_PROGRAM_ADDRESS } from "../programs";
+import { getAccountMetaFactory, type ResolvedAccount } from "../shared";
 
 export const SET_GATING_PROGRAM_DISCRIMINATOR = 2;
 
@@ -68,17 +68,17 @@ export type SetGatingProgramInstructionDataArgs = { newGatingProgram: Address };
 export function getSetGatingProgramInstructionDataEncoder(): FixedSizeEncoder<SetGatingProgramInstructionDataArgs> {
   return transformEncoder(
     getStructEncoder([
-      ['discriminator', getU8Encoder()],
-      ['newGatingProgram', getAddressEncoder()],
+      ["discriminator", getU8Encoder()],
+      ["newGatingProgram", getAddressEncoder()],
     ]),
-    (value) => ({ ...value, discriminator: SET_GATING_PROGRAM_DISCRIMINATOR })
+    (value) => ({ ...value, discriminator: SET_GATING_PROGRAM_DISCRIMINATOR }),
   );
 }
 
 export function getSetGatingProgramInstructionDataDecoder(): FixedSizeDecoder<SetGatingProgramInstructionData> {
   return getStructDecoder([
-    ['discriminator', getU8Decoder()],
-    ['newGatingProgram', getAddressDecoder()],
+    ["discriminator", getU8Decoder()],
+    ["newGatingProgram", getAddressDecoder()],
   ]);
 }
 
@@ -88,7 +88,7 @@ export function getSetGatingProgramInstructionDataCodec(): FixedSizeCodec<
 > {
   return combineCodec(
     getSetGatingProgramInstructionDataEncoder(),
-    getSetGatingProgramInstructionDataDecoder()
+    getSetGatingProgramInstructionDataDecoder(),
   );
 }
 
@@ -98,7 +98,7 @@ export type SetGatingProgramInput<
 > = {
   authority: TransactionSigner<TAccountAuthority>;
   mintConfig: Address<TAccountMintConfig>;
-  newGatingProgram: SetGatingProgramInstructionDataArgs['newGatingProgram'];
+  newGatingProgram: SetGatingProgramInstructionDataArgs["newGatingProgram"];
 };
 
 export function getSetGatingProgramInstruction<
@@ -107,7 +107,7 @@ export function getSetGatingProgramInstruction<
   TProgramAddress extends Address = typeof TOKEN_ACL_PROGRAM_ADDRESS,
 >(
   input: SetGatingProgramInput<TAccountAuthority, TAccountMintConfig>,
-  config?: { programAddress?: TProgramAddress }
+  config?: { programAddress?: TProgramAddress },
 ): SetGatingProgramInstruction<
   TProgramAddress,
   TAccountAuthority,
@@ -129,14 +129,14 @@ export function getSetGatingProgramInstruction<
   // Original args.
   const args = { ...input };
 
-  const getAccountMeta = getAccountMetaFactory(programAddress, 'programId');
+  const getAccountMeta = getAccountMetaFactory(programAddress, "programId");
   return Object.freeze({
     accounts: [
       getAccountMeta(accounts.authority),
       getAccountMeta(accounts.mintConfig),
     ],
     data: getSetGatingProgramInstructionDataEncoder().encode(
-      args as SetGatingProgramInstructionDataArgs
+      args as SetGatingProgramInstructionDataArgs,
     ),
     programAddress,
   } as SetGatingProgramInstruction<
@@ -164,11 +164,11 @@ export function parseSetGatingProgramInstruction<
 >(
   instruction: Instruction<TProgram> &
     InstructionWithAccounts<TAccountMetas> &
-    InstructionWithData<ReadonlyUint8Array>
+    InstructionWithData<ReadonlyUint8Array>,
 ): ParsedSetGatingProgramInstruction<TProgram, TAccountMetas> {
   if (instruction.accounts.length < 2) {
     // TODO: Coded error.
-    throw new Error('Not enough accounts');
+    throw new Error("Not enough accounts");
   }
   let accountIndex = 0;
   const getNextAccount = () => {

@@ -28,9 +28,9 @@ import {
   type ReadonlyUint8Array,
   type TransactionSigner,
   type WritableAccount,
-} from '@solana/kit';
-import { TOKEN_ACL_PROGRAM_ADDRESS } from '../programs';
-import { getAccountMetaFactory, type ResolvedAccount } from '../shared';
+} from "@solana/kit";
+import { TOKEN_ACL_PROGRAM_ADDRESS } from "../programs";
+import { getAccountMetaFactory, type ResolvedAccount } from "../shared";
 
 export const SET_AUTHORITY_DISCRIMINATOR = 1;
 
@@ -68,17 +68,17 @@ export type SetAuthorityInstructionDataArgs = { newAuthority: Address };
 export function getSetAuthorityInstructionDataEncoder(): FixedSizeEncoder<SetAuthorityInstructionDataArgs> {
   return transformEncoder(
     getStructEncoder([
-      ['discriminator', getU8Encoder()],
-      ['newAuthority', getAddressEncoder()],
+      ["discriminator", getU8Encoder()],
+      ["newAuthority", getAddressEncoder()],
     ]),
-    (value) => ({ ...value, discriminator: SET_AUTHORITY_DISCRIMINATOR })
+    (value) => ({ ...value, discriminator: SET_AUTHORITY_DISCRIMINATOR }),
   );
 }
 
 export function getSetAuthorityInstructionDataDecoder(): FixedSizeDecoder<SetAuthorityInstructionData> {
   return getStructDecoder([
-    ['discriminator', getU8Decoder()],
-    ['newAuthority', getAddressDecoder()],
+    ["discriminator", getU8Decoder()],
+    ["newAuthority", getAddressDecoder()],
   ]);
 }
 
@@ -88,7 +88,7 @@ export function getSetAuthorityInstructionDataCodec(): FixedSizeCodec<
 > {
   return combineCodec(
     getSetAuthorityInstructionDataEncoder(),
-    getSetAuthorityInstructionDataDecoder()
+    getSetAuthorityInstructionDataDecoder(),
   );
 }
 
@@ -98,7 +98,7 @@ export type SetAuthorityInput<
 > = {
   authority: TransactionSigner<TAccountAuthority>;
   mintConfig: Address<TAccountMintConfig>;
-  newAuthority: SetAuthorityInstructionDataArgs['newAuthority'];
+  newAuthority: SetAuthorityInstructionDataArgs["newAuthority"];
 };
 
 export function getSetAuthorityInstruction<
@@ -107,7 +107,7 @@ export function getSetAuthorityInstruction<
   TProgramAddress extends Address = typeof TOKEN_ACL_PROGRAM_ADDRESS,
 >(
   input: SetAuthorityInput<TAccountAuthority, TAccountMintConfig>,
-  config?: { programAddress?: TProgramAddress }
+  config?: { programAddress?: TProgramAddress },
 ): SetAuthorityInstruction<
   TProgramAddress,
   TAccountAuthority,
@@ -129,14 +129,14 @@ export function getSetAuthorityInstruction<
   // Original args.
   const args = { ...input };
 
-  const getAccountMeta = getAccountMetaFactory(programAddress, 'programId');
+  const getAccountMeta = getAccountMetaFactory(programAddress, "programId");
   return Object.freeze({
     accounts: [
       getAccountMeta(accounts.authority),
       getAccountMeta(accounts.mintConfig),
     ],
     data: getSetAuthorityInstructionDataEncoder().encode(
-      args as SetAuthorityInstructionDataArgs
+      args as SetAuthorityInstructionDataArgs,
     ),
     programAddress,
   } as SetAuthorityInstruction<
@@ -164,11 +164,11 @@ export function parseSetAuthorityInstruction<
 >(
   instruction: Instruction<TProgram> &
     InstructionWithAccounts<TAccountMetas> &
-    InstructionWithData<ReadonlyUint8Array>
+    InstructionWithData<ReadonlyUint8Array>,
 ): ParsedSetAuthorityInstruction<TProgram, TAccountMetas> {
   if (instruction.accounts.length < 2) {
     // TODO: Coded error.
-    throw new Error('Not enough accounts');
+    throw new Error("Not enough accounts");
   }
   let accountIndex = 0;
   const getNextAccount = () => {

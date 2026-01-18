@@ -27,21 +27,24 @@ import {
   type FixedSizeEncoder,
   type MaybeAccount,
   type MaybeEncodedAccount,
-} from '@solana/kit';
-import { findFlagAccountPda, FlagAccountSeeds } from '../pdas';
+} from "@solana/kit";
+import { findFlagAccountPda, FlagAccountSeeds } from "../pdas";
 
 export type FlagAccount = { isThawing: boolean };
 
 export type FlagAccountArgs = FlagAccount;
 
+/** Gets the encoder for {@link FlagAccountArgs} account data. */
 export function getFlagAccountEncoder(): FixedSizeEncoder<FlagAccountArgs> {
-  return getStructEncoder([['isThawing', getBooleanEncoder()]]);
+  return getStructEncoder([["isThawing", getBooleanEncoder()]]);
 }
 
+/** Gets the decoder for {@link FlagAccount} account data. */
 export function getFlagAccountDecoder(): FixedSizeDecoder<FlagAccount> {
-  return getStructDecoder([['isThawing', getBooleanDecoder()]]);
+  return getStructDecoder([["isThawing", getBooleanDecoder()]]);
 }
 
+/** Gets the codec for {@link FlagAccount} account data. */
 export function getFlagAccountCodec(): FixedSizeCodec<
   FlagAccountArgs,
   FlagAccount
@@ -50,24 +53,24 @@ export function getFlagAccountCodec(): FixedSizeCodec<
 }
 
 export function decodeFlagAccount<TAddress extends string = string>(
-  encodedAccount: EncodedAccount<TAddress>
+  encodedAccount: EncodedAccount<TAddress>,
 ): Account<FlagAccount, TAddress>;
 export function decodeFlagAccount<TAddress extends string = string>(
-  encodedAccount: MaybeEncodedAccount<TAddress>
+  encodedAccount: MaybeEncodedAccount<TAddress>,
 ): MaybeAccount<FlagAccount, TAddress>;
 export function decodeFlagAccount<TAddress extends string = string>(
-  encodedAccount: EncodedAccount<TAddress> | MaybeEncodedAccount<TAddress>
+  encodedAccount: EncodedAccount<TAddress> | MaybeEncodedAccount<TAddress>,
 ): Account<FlagAccount, TAddress> | MaybeAccount<FlagAccount, TAddress> {
   return decodeAccount(
     encodedAccount as MaybeEncodedAccount<TAddress>,
-    getFlagAccountDecoder()
+    getFlagAccountDecoder(),
   );
 }
 
 export async function fetchFlagAccount<TAddress extends string = string>(
   rpc: Parameters<typeof fetchEncodedAccount>[0],
   address: Address<TAddress>,
-  config?: FetchAccountConfig
+  config?: FetchAccountConfig,
 ): Promise<Account<FlagAccount, TAddress>> {
   const maybeAccount = await fetchMaybeFlagAccount(rpc, address, config);
   assertAccountExists(maybeAccount);
@@ -77,7 +80,7 @@ export async function fetchFlagAccount<TAddress extends string = string>(
 export async function fetchMaybeFlagAccount<TAddress extends string = string>(
   rpc: Parameters<typeof fetchEncodedAccount>[0],
   address: Address<TAddress>,
-  config?: FetchAccountConfig
+  config?: FetchAccountConfig,
 ): Promise<MaybeAccount<FlagAccount, TAddress>> {
   const maybeAccount = await fetchEncodedAccount(rpc, address, config);
   return decodeFlagAccount(maybeAccount);
@@ -86,7 +89,7 @@ export async function fetchMaybeFlagAccount<TAddress extends string = string>(
 export async function fetchAllFlagAccount(
   rpc: Parameters<typeof fetchEncodedAccounts>[0],
   addresses: Array<Address>,
-  config?: FetchAccountsConfig
+  config?: FetchAccountsConfig,
 ): Promise<Account<FlagAccount>[]> {
   const maybeAccounts = await fetchAllMaybeFlagAccount(rpc, addresses, config);
   assertAccountsExist(maybeAccounts);
@@ -96,7 +99,7 @@ export async function fetchAllFlagAccount(
 export async function fetchAllMaybeFlagAccount(
   rpc: Parameters<typeof fetchEncodedAccounts>[0],
   addresses: Array<Address>,
-  config?: FetchAccountsConfig
+  config?: FetchAccountsConfig,
 ): Promise<MaybeAccount<FlagAccount>[]> {
   const maybeAccounts = await fetchEncodedAccounts(rpc, addresses, config);
   return maybeAccounts.map((maybeAccount) => decodeFlagAccount(maybeAccount));
@@ -109,7 +112,7 @@ export function getFlagAccountSize(): number {
 export async function fetchFlagAccountFromSeeds(
   rpc: Parameters<typeof fetchEncodedAccount>[0],
   seeds: FlagAccountSeeds,
-  config: FetchAccountConfig & { programAddress?: Address } = {}
+  config: FetchAccountConfig & { programAddress?: Address } = {},
 ): Promise<Account<FlagAccount>> {
   const maybeAccount = await fetchMaybeFlagAccountFromSeeds(rpc, seeds, config);
   assertAccountExists(maybeAccount);
@@ -119,7 +122,7 @@ export async function fetchFlagAccountFromSeeds(
 export async function fetchMaybeFlagAccountFromSeeds(
   rpc: Parameters<typeof fetchEncodedAccount>[0],
   seeds: FlagAccountSeeds,
-  config: FetchAccountConfig & { programAddress?: Address } = {}
+  config: FetchAccountConfig & { programAddress?: Address } = {},
 ): Promise<MaybeAccount<FlagAccount>> {
   const { programAddress, ...fetchConfig } = config;
   const [address] = await findFlagAccountPda(seeds, { programAddress });

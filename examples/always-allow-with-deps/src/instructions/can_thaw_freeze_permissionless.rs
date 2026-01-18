@@ -35,7 +35,7 @@ impl CanThawFreezePermissionless<'_> {
             return Err(ProgramError::InvalidAccountData);
         }
 
-        if self.associated_token_program.key != &spl_associated_token_account_client::program::ID {
+        if self.associated_token_program.key != &spl_associated_token_account_interface::program::ID {
             return Err(ProgramError::IncorrectProgramId);
         }
 
