@@ -68,7 +68,7 @@ impl DeleteConfig<'_> {
 
         **self.receiver.try_borrow_mut_lamports()? += self.mint_config.lamports();
         **self.mint_config.try_borrow_mut_lamports()? = 0;
-        self.mint_config.realloc(0, false)?;
+        self.mint_config.resize(0)?;
         self.mint_config.assign(&Pubkey::default());
 
         Ok(())

@@ -12,8 +12,8 @@ use solana_program_error::ProgramError;
 use solana_program_option::COption;
 use solana_pubkey::Pubkey;
 use solana_sdk::program_pack::Pack;
-use spl_associated_token_account_client::address::get_associated_token_address_with_program_id;
-use spl_associated_token_account_client::instruction::{
+use spl_associated_token_account_interface::address::get_associated_token_address_with_program_id;
+use spl_associated_token_account_interface::instruction::{
     create_associated_token_account, create_associated_token_account_idempotent,
 };
 pub use spl_tlv_account_resolution::state::{AccountDataResult, AccountFetchError};

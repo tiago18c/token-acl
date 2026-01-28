@@ -12,7 +12,7 @@ import {
   getUtf8Encoder,
   type Address,
   type ProgramDerivedAddress,
-} from '@solana/kit';
+} from "@solana/kit";
 
 export type MintConfigSeeds = {
   mint: Address;
@@ -20,15 +20,15 @@ export type MintConfigSeeds = {
 
 export async function findMintConfigPda(
   seeds: MintConfigSeeds,
-  config: { programAddress?: Address | undefined } = {}
+  config: { programAddress?: Address | undefined } = {},
 ): Promise<ProgramDerivedAddress> {
   const {
-    programAddress = 'TACLkU6CiCdkQN2MjoyDkVg2yAH9zkxiHDsiztQ52TP' as Address<'TACLkU6CiCdkQN2MjoyDkVg2yAH9zkxiHDsiztQ52TP'>,
+    programAddress = "TACLkU6CiCdkQN2MjoyDkVg2yAH9zkxiHDsiztQ52TP" as Address<"TACLkU6CiCdkQN2MjoyDkVg2yAH9zkxiHDsiztQ52TP">,
   } = config;
   return await getProgramDerivedAddress({
     programAddress,
     seeds: [
-      getUtf8Encoder().encode('MINT_CONFIG'),
+      getUtf8Encoder().encode("MINT_CONFIG"),
       getAddressEncoder().encode(seeds.mint),
     ],
   });

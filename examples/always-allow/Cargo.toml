@@ -26,9 +26,6 @@ token-acl-interface = { workspace = true }
 spl-type-length-value = { workspace = true }
 bytemuck = { version = "1.21.0", features = ["derive"] }
 
-[dev-dependencies]
-solana-sdk = "2.2.1"
-
 [lib]
 crate-type = ["cdylib", "lib"]
 

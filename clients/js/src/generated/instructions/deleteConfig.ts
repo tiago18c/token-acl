@@ -29,14 +29,14 @@ import {
   type ReadonlyUint8Array,
   type TransactionSigner,
   type WritableAccount,
-} from '@solana/kit';
-import { findMintConfigPda } from '../pdas';
-import { TOKEN_ACL_PROGRAM_ADDRESS } from '../programs';
+} from "@solana/kit";
+import { findMintConfigPda } from "../pdas";
+import { TOKEN_ACL_PROGRAM_ADDRESS } from "../programs";
 import {
   expectAddress,
   getAccountMetaFactory,
   type ResolvedAccount,
-} from '../shared';
+} from "../shared";
 
 export const DELETE_CONFIG_DISCRIMINATOR = 3;
 
@@ -52,7 +52,7 @@ export type DeleteConfigInstruction<
   TAccountMintConfig extends string | AccountMeta<string> = string,
   TAccountTokenProgram extends
     | string
-    | AccountMeta<string> = 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb',
+    | AccountMeta<string> = "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
   TRemainingAccounts extends readonly AccountMeta<string>[] = [],
 > = Instruction<TProgram> &
   InstructionWithData<ReadonlyUint8Array> &
@@ -88,17 +88,17 @@ export type DeleteConfigInstructionDataArgs = { newFreezeAuthority: Address };
 export function getDeleteConfigInstructionDataEncoder(): FixedSizeEncoder<DeleteConfigInstructionDataArgs> {
   return transformEncoder(
     getStructEncoder([
-      ['discriminator', getU8Encoder()],
-      ['newFreezeAuthority', getAddressEncoder()],
+      ["discriminator", getU8Encoder()],
+      ["newFreezeAuthority", getAddressEncoder()],
     ]),
-    (value) => ({ ...value, discriminator: DELETE_CONFIG_DISCRIMINATOR })
+    (value) => ({ ...value, discriminator: DELETE_CONFIG_DISCRIMINATOR }),
   );
 }
 
 export function getDeleteConfigInstructionDataDecoder(): FixedSizeDecoder<DeleteConfigInstructionData> {
   return getStructDecoder([
-    ['discriminator', getU8Decoder()],
-    ['newFreezeAuthority', getAddressDecoder()],
+    ["discriminator", getU8Decoder()],
+    ["newFreezeAuthority", getAddressDecoder()],
   ]);
 }
 
@@ -108,7 +108,7 @@ export function getDeleteConfigInstructionDataCodec(): FixedSizeCodec<
 > {
   return combineCodec(
     getDeleteConfigInstructionDataEncoder(),
-    getDeleteConfigInstructionDataDecoder()
+    getDeleteConfigInstructionDataDecoder(),
   );
 }
 
@@ -124,7 +124,7 @@ export type DeleteConfigAsyncInput<
   mint: Address<TAccountMint>;
   mintConfig?: Address<TAccountMintConfig>;
   tokenProgram?: Address<TAccountTokenProgram>;
-  newFreezeAuthority: DeleteConfigInstructionDataArgs['newFreezeAuthority'];
+  newFreezeAuthority: DeleteConfigInstructionDataArgs["newFreezeAuthority"];
 };
 
 export async function getDeleteConfigInstructionAsync<
@@ -142,7 +142,7 @@ export async function getDeleteConfigInstructionAsync<
     TAccountMintConfig,
     TAccountTokenProgram
   >,
-  config?: { programAddress?: TProgramAddress }
+  config?: { programAddress?: TProgramAddress },
 ): Promise<
   DeleteConfigInstruction<
     TProgramAddress,
@@ -180,10 +180,10 @@ export async function getDeleteConfigInstructionAsync<
   }
   if (!accounts.tokenProgram.value) {
     accounts.tokenProgram.value =
-      'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb' as Address<'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'>;
+      "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb" as Address<"TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb">;
   }
 
-  const getAccountMeta = getAccountMetaFactory(programAddress, 'programId');
+  const getAccountMeta = getAccountMetaFactory(programAddress, "programId");
   return Object.freeze({
     accounts: [
       getAccountMeta(accounts.authority),
@@ -193,7 +193,7 @@ export async function getDeleteConfigInstructionAsync<
       getAccountMeta(accounts.tokenProgram),
     ],
     data: getDeleteConfigInstructionDataEncoder().encode(
-      args as DeleteConfigInstructionDataArgs
+      args as DeleteConfigInstructionDataArgs,
     ),
     programAddress,
   } as DeleteConfigInstruction<
@@ -218,7 +218,7 @@ export type DeleteConfigInput<
   mint: Address<TAccountMint>;
   mintConfig: Address<TAccountMintConfig>;
   tokenProgram?: Address<TAccountTokenProgram>;
-  newFreezeAuthority: DeleteConfigInstructionDataArgs['newFreezeAuthority'];
+  newFreezeAuthority: DeleteConfigInstructionDataArgs["newFreezeAuthority"];
 };
 
 export function getDeleteConfigInstruction<
@@ -236,7 +236,7 @@ export function getDeleteConfigInstruction<
     TAccountMintConfig,
     TAccountTokenProgram
   >,
-  config?: { programAddress?: TProgramAddress }
+  config?: { programAddress?: TProgramAddress },
 ): DeleteConfigInstruction<
   TProgramAddress,
   TAccountAuthority,
@@ -267,10 +267,10 @@ export function getDeleteConfigInstruction<
   // Resolve default values.
   if (!accounts.tokenProgram.value) {
     accounts.tokenProgram.value =
-      'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb' as Address<'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'>;
+      "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb" as Address<"TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb">;
   }
 
-  const getAccountMeta = getAccountMetaFactory(programAddress, 'programId');
+  const getAccountMeta = getAccountMetaFactory(programAddress, "programId");
   return Object.freeze({
     accounts: [
       getAccountMeta(accounts.authority),
@@ -280,7 +280,7 @@ export function getDeleteConfigInstruction<
       getAccountMeta(accounts.tokenProgram),
     ],
     data: getDeleteConfigInstructionDataEncoder().encode(
-      args as DeleteConfigInstructionDataArgs
+      args as DeleteConfigInstructionDataArgs,
     ),
     programAddress,
   } as DeleteConfigInstruction<
@@ -314,11 +314,11 @@ export function parseDeleteConfigInstruction<
 >(
   instruction: Instruction<TProgram> &
     InstructionWithAccounts<TAccountMetas> &
-    InstructionWithData<ReadonlyUint8Array>
+    InstructionWithData<ReadonlyUint8Array>,
 ): ParsedDeleteConfigInstruction<TProgram, TAccountMetas> {
   if (instruction.accounts.length < 5) {
     // TODO: Coded error.
-    throw new Error('Not enough accounts');
+    throw new Error("Not enough accounts");
   }
   let accountIndex = 0;
   const getNextAccount = () => {

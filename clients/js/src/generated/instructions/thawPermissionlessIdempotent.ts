@@ -27,14 +27,14 @@ import {
   type ReadonlyUint8Array,
   type TransactionSigner,
   type WritableAccount,
-} from '@solana/kit';
-import { findFlagAccountPda, findMintConfigPda } from '../pdas';
-import { TOKEN_ACL_PROGRAM_ADDRESS } from '../programs';
+} from "@solana/kit";
+import { findFlagAccountPda, findMintConfigPda } from "../pdas";
+import { TOKEN_ACL_PROGRAM_ADDRESS } from "../programs";
 import {
   expectAddress,
   getAccountMetaFactory,
   type ResolvedAccount,
-} from '../shared';
+} from "../shared";
 
 export const THAW_PERMISSIONLESS_IDEMPOTENT_DISCRIMINATOR = 9;
 
@@ -52,10 +52,10 @@ export type ThawPermissionlessIdempotentInstruction<
   TAccountMintConfig extends string | AccountMeta<string> = string,
   TAccountTokenProgram extends
     | string
-    | AccountMeta<string> = 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb',
+    | AccountMeta<string> = "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
   TAccountSystemProgram extends
     | string
-    | AccountMeta<string> = '11111111111111111111111111111111',
+    | AccountMeta<string> = "11111111111111111111111111111111",
   TAccountGatingProgram extends string | AccountMeta<string> = string,
   TRemainingAccounts extends readonly AccountMeta<string>[] = [],
 > = Instruction<TProgram> &
@@ -102,16 +102,16 @@ export type ThawPermissionlessIdempotentInstructionDataArgs = {};
 
 export function getThawPermissionlessIdempotentInstructionDataEncoder(): FixedSizeEncoder<ThawPermissionlessIdempotentInstructionDataArgs> {
   return transformEncoder(
-    getStructEncoder([['discriminator', getU8Encoder()]]),
+    getStructEncoder([["discriminator", getU8Encoder()]]),
     (value) => ({
       ...value,
       discriminator: THAW_PERMISSIONLESS_IDEMPOTENT_DISCRIMINATOR,
-    })
+    }),
   );
 }
 
 export function getThawPermissionlessIdempotentInstructionDataDecoder(): FixedSizeDecoder<ThawPermissionlessIdempotentInstructionData> {
-  return getStructDecoder([['discriminator', getU8Decoder()]]);
+  return getStructDecoder([["discriminator", getU8Decoder()]]);
 }
 
 export function getThawPermissionlessIdempotentInstructionDataCodec(): FixedSizeCodec<
@@ -120,7 +120,7 @@ export function getThawPermissionlessIdempotentInstructionDataCodec(): FixedSize
 > {
   return combineCodec(
     getThawPermissionlessIdempotentInstructionDataEncoder(),
-    getThawPermissionlessIdempotentInstructionDataDecoder()
+    getThawPermissionlessIdempotentInstructionDataDecoder(),
   );
 }
 
@@ -169,7 +169,7 @@ export async function getThawPermissionlessIdempotentInstructionAsync<
     TAccountSystemProgram,
     TAccountGatingProgram
   >,
-  config?: { programAddress?: TProgramAddress }
+  config?: { programAddress?: TProgramAddress },
 ): Promise<
   ThawPermissionlessIdempotentInstruction<
     TProgramAddress,
@@ -220,14 +220,14 @@ export async function getThawPermissionlessIdempotentInstructionAsync<
   }
   if (!accounts.tokenProgram.value) {
     accounts.tokenProgram.value =
-      'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb' as Address<'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'>;
+      "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb" as Address<"TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb">;
   }
   if (!accounts.systemProgram.value) {
     accounts.systemProgram.value =
-      '11111111111111111111111111111111' as Address<'11111111111111111111111111111111'>;
+      "11111111111111111111111111111111" as Address<"11111111111111111111111111111111">;
   }
 
-  const getAccountMeta = getAccountMetaFactory(programAddress, 'programId');
+  const getAccountMeta = getAccountMetaFactory(programAddress, "programId");
   return Object.freeze({
     accounts: [
       getAccountMeta(accounts.authority),
@@ -301,7 +301,7 @@ export function getThawPermissionlessIdempotentInstruction<
     TAccountSystemProgram,
     TAccountGatingProgram
   >,
-  config?: { programAddress?: TProgramAddress }
+  config?: { programAddress?: TProgramAddress },
 ): ThawPermissionlessIdempotentInstruction<
   TProgramAddress,
   TAccountAuthority,
@@ -340,14 +340,14 @@ export function getThawPermissionlessIdempotentInstruction<
   // Resolve default values.
   if (!accounts.tokenProgram.value) {
     accounts.tokenProgram.value =
-      'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb' as Address<'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'>;
+      "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb" as Address<"TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb">;
   }
   if (!accounts.systemProgram.value) {
     accounts.systemProgram.value =
-      '11111111111111111111111111111111' as Address<'11111111111111111111111111111111'>;
+      "11111111111111111111111111111111" as Address<"11111111111111111111111111111111">;
   }
 
-  const getAccountMeta = getAccountMetaFactory(programAddress, 'programId');
+  const getAccountMeta = getAccountMetaFactory(programAddress, "programId");
   return Object.freeze({
     accounts: [
       getAccountMeta(accounts.authority),
@@ -401,11 +401,11 @@ export function parseThawPermissionlessIdempotentInstruction<
 >(
   instruction: Instruction<TProgram> &
     InstructionWithAccounts<TAccountMetas> &
-    InstructionWithData<ReadonlyUint8Array>
+    InstructionWithData<ReadonlyUint8Array>,
 ): ParsedThawPermissionlessIdempotentInstruction<TProgram, TAccountMetas> {
   if (instruction.accounts.length < 9) {
     // TODO: Coded error.
-    throw new Error('Not enough accounts');
+    throw new Error("Not enough accounts");
   }
   let accountIndex = 0;
   const getNextAccount = () => {
@@ -427,7 +427,7 @@ export function parseThawPermissionlessIdempotentInstruction<
       gatingProgram: getNextAccount(),
     },
     data: getThawPermissionlessIdempotentInstructionDataDecoder().decode(
-      instruction.data
+      instruction.data,
     ),
   };
 }

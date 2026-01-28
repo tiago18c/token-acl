@@ -1,8 +1,8 @@
 use solana_client::rpc_config::RpcSendTransactionConfig;
 use solana_sdk::program_option::COption;
 use solana_sdk::program_pack::Pack;
-use spl_associated_token_account_client::address::get_associated_token_address_with_program_id;
-use spl_associated_token_account_client::instruction::create_associated_token_account;
+use spl_associated_token_account_interface::address::get_associated_token_address_with_program_id;
+use spl_associated_token_account_interface::instruction::create_associated_token_account;
 use spl_token_client::spl_token_2022::{
     extension::{BaseStateWithExtensions, PodStateWithExtensions},
     pod::PodMint,
@@ -23,12 +23,12 @@ use {
     solana_client::nonblocking::rpc_client::RpcClient,
     solana_remote_wallet::remote_wallet::RemoteWalletManager,
     solana_sdk::{
-        commitment_config::CommitmentConfig,
         message::Message,
         pubkey::Pubkey,
         signature::{Signature, Signer},
         transaction::Transaction,
     },
+    solana_commitment_config::CommitmentConfig,
     spl_token_client::spl_token_2022::{self, extension::StateWithExtensions, state::Account},
     std::{error::Error, process::exit, rc::Rc, sync::Arc},
 };
@@ -593,7 +593,7 @@ async fn process_thaw_permissionless(
         .send_and_confirm_transaction_with_spinner_and_config(
             &transaction,
             CommitmentConfig {
-                commitment: solana_sdk::commitment_config::CommitmentLevel::Confirmed,
+                commitment: solana_commitment_config::CommitmentLevel::Confirmed,
             },
             RpcSendTransactionConfig {
                 skip_preflight: true,
@@ -649,7 +649,7 @@ async fn process_create_ata_and_thaw_permissionless(
         .send_and_confirm_transaction_with_spinner_and_config(
             &transaction,
             CommitmentConfig {
-                commitment: solana_sdk::commitment_config::CommitmentLevel::Confirmed,
+                commitment: solana_commitment_config::CommitmentLevel::Confirmed,
             },
             RpcSendTransactionConfig {
                 skip_preflight: true,
@@ -734,6 +734,16 @@ async fn main() -> Result<(), Box<dyn Error>> {
                         .short('g')
                         .long("gating-program")
                         .help("Specify the gating program address"),
+                )
+                .arg(
+                    Arg::new("freeze_authority")
+                        .value_name("FREEZE_AUTHORITY")
+                        .value_parser(SignerSourceParserBuilder::default().allow_pubkey().build())
+                        .takes_value(true)
+                        .required(false)
+                        .short('f')
+                        .long("freeze-authority")
+                        .help("Specify the freeze authority address"),
                 )
         )
         .subcommand(
@@ -1187,7 +1197,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
             )
             .await
             .unwrap_or_else(|err| {
-                eprintln!("error: thaw-permissionless: {}", err);
+                eprintln!("error: create-ata-and-thaw-permissionless: {}", err);
                 exit(1);
             });
             println!("{}", response);

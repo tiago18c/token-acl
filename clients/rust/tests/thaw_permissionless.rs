@@ -9,7 +9,7 @@ use solana_sdk::{
     transaction::{Transaction, TransactionError},
 };
 use solana_system_interface::program::ID as SYSTEM_PROGRAM_ID;
-use spl_associated_token_account_client::{
+use spl_associated_token_account_interface::{
     address::get_associated_token_address_with_program_id,
     instruction::create_associated_token_account_idempotent,
 };

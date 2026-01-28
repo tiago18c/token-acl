@@ -6,14 +6,14 @@
  * @see https://github.com/codama-idl/codama
  */
 
-export * from './createConfig';
-export * from './deleteConfig';
-export * from './freeze';
-export * from './freezePermissionless';
-export * from './freezePermissionlessIdempotent';
-export * from './setAuthority';
-export * from './setGatingProgram';
-export * from './thaw';
-export * from './thawPermissionless';
-export * from './thawPermissionlessIdempotent';
-export * from './togglePermissionlessInstructions';
+export * from "./createConfig";
+export * from "./deleteConfig";
+export * from "./freeze";
+export * from "./freezePermissionless";
+export * from "./freezePermissionlessIdempotent";
+export * from "./setAuthority";
+export * from "./setGatingProgram";
+export * from "./thaw";
+export * from "./thawPermissionless";
+export * from "./thawPermissionlessIdempotent";
+export * from "./togglePermissionlessInstructions";
