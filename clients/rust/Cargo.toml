@@ -7,35 +7,25 @@ license = { workspace = true }
 edition = { workspace = true }
 
 [dependencies]
-arrayref = "0.3.9"
-bytemuck = { version = "1.23.1", features = ["derive"] }
-num-derive = "0.4"
-num-traits = "0.2"
+num-derive = { workspace = true }
+num-traits = { workspace = true }
 solana-account-info = { workspace = true }
 solana-cpi = { workspace = true }
 solana-account = { workspace = true }
-solana-decode-error = { workspace = true }
 solana-instruction = { workspace = true }
-solana-msg = { workspace = true }
 solana-program-error = { workspace = true }
 solana-pubkey = { workspace = true }
-solana-client = { workspace = true }
-solana-program-entrypoint = { workspace = true }
-spl-discriminator = { workspace = true }
-spl-program-error = { workspace = true }
+solana-client = { workspace = true, optional = true }
 spl-tlv-account-resolution = { workspace = true }
-spl-type-length-value = { workspace = true }
-spl-pod = { workspace = true }
-thiserror = "2.0"
+thiserror = { workspace = true }
 borsh = "1.0.0"
 token-acl-interface = { workspace = true }
 solana-system-interface = { workspace = true }
-spl-token-client = { workspace = true }
+spl-token-2022-interface = { workspace = true }
 spl-token-metadata-interface = { workspace = true }
 spl-associated-token-account-interface = { workspace = true }
 solana-program-option = { workspace = true }
-solana-sdk = { workspace = true }
-anchor-lang = { workspace = true, optional = true }
+solana-program-pack = { workspace = true }
 
 [dev-dependencies]
 litesvm = { workspace = true }
@@ -43,15 +33,20 @@ solana-program-runtime = { workspace = true }
 solana-instruction = { workspace = true }
 tokio = { version = "^1.20", features = ["rt-multi-thread", "macros"] }
 solana-compute-budget-interface = "3.0.0"
-spl-token-2022 = { workspace = true }
+solana-sdk = { workspace = true }
 
 [lib]
 doctest = false
 crate-type = ["cdylib", "lib"]
 
 [features]
-default = []
-fetch = []
-anchor = []
-anchor-idl = []
+default = ["fetch"]
+fetch = ["dep:solana-client"]
 serde = []
+
+[lints.rust.unexpected_cfgs]
+level = "warn"
+check-cfg = [
+    'cfg(target_os, values("solana"))',
+    'cfg(feature, values("frozen-abi", "no-entrypoint", "custom-heap", "custom-panic", "anchor", "anchor-idl-build"))',
+]

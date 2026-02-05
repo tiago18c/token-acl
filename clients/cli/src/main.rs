@@ -3,10 +3,10 @@ use solana_sdk::program_option::COption;
 use solana_sdk::program_pack::Pack;
 use spl_associated_token_account_interface::address::get_associated_token_address_with_program_id;
 use spl_associated_token_account_interface::instruction::create_associated_token_account;
-use spl_token_client::spl_token_2022::{
-    extension::{BaseStateWithExtensions, PodStateWithExtensions},
+use spl_token_2022_interface::{
+    extension::{BaseStateWithExtensions, PodStateWithExtensions, StateWithExtensions},
     pod::PodMint,
-    state::AccountState,
+    state::{Account, AccountState},
 };
 use spl_token_metadata_interface::state::TokenMetadata;
 use token_acl_client::set_mint_tacl_metadata_ix;
@@ -21,6 +21,7 @@ use {
         keypair::signer_from_path,
     },
     solana_client::nonblocking::rpc_client::RpcClient,
+    solana_commitment_config::CommitmentConfig,
     solana_remote_wallet::remote_wallet::RemoteWalletManager,
     solana_sdk::{
         message::Message,
@@ -28,8 +29,6 @@ use {
         signature::{Signature, Signer},
         transaction::Transaction,
     },
-    solana_commitment_config::CommitmentConfig,
-    spl_token_client::spl_token_2022::{self, extension::StateWithExtensions, state::Account},
     std::{error::Error, process::exit, rc::Rc, sync::Arc},
 };
 
@@ -314,7 +313,7 @@ async fn process_freeze(
         .mint(ta.base.mint)
         .token_account(token_account)
         .mint_config(config)
-        .token_program(spl_token_2022::ID)
+        .token_program(spl_token_2022_interface::ID)
         .instruction();
 
     let mut transaction = Transaction::new_unsigned(Message::new(&[ix], Some(&payer.pubkey())));
@@ -364,14 +363,14 @@ async fn process_freeze_permissionless(
                 let token_account = get_associated_token_address_with_program_id(
                     &token_account_owner_pk,
                     &mint,
-                    &spl_token_2022::ID,
+                    &spl_token_2022_interface::ID,
                 );
 
                 let ix = create_associated_token_account(
                     &payer.pubkey(),
                     &token_account_owner_pk,
                     &mint,
-                    &spl_token_2022::ID,
+                    &spl_token_2022_interface::ID,
                 );
                 instructions.push(ix);
 
@@ -409,7 +408,7 @@ async fn process_freeze_permissionless(
         &token_account_pk,
         &mint,
         &config,
-        &spl_token_2022::ID,
+        &spl_token_2022_interface::ID,
         &token_account_owner_pk,
         false,
         |pubkey| {
@@ -463,7 +462,7 @@ async fn process_thaw(
         .mint(ta.base.mint)
         .token_account(token_account)
         .mint_config(config)
-        .token_program(spl_token_2022::ID)
+        .token_program(spl_token_2022_interface::ID)
         .instruction();
 
     let mut transaction = Transaction::new_unsigned(Message::new(&[ix], Some(&payer.pubkey())));
@@ -513,14 +512,14 @@ async fn process_thaw_permissionless(
                 let token_account = get_associated_token_address_with_program_id(
                     &token_account_owner_pk,
                     &mint,
-                    &spl_token_2022::ID,
+                    &spl_token_2022_interface::ID,
                 );
 
                 let ix = create_associated_token_account(
                     &payer.pubkey(),
                     &token_account_owner_pk,
                     &mint,
-                    &spl_token_2022::ID,
+                    &spl_token_2022_interface::ID,
                 );
                 instructions.push(ix);
 
@@ -558,7 +557,7 @@ async fn process_thaw_permissionless(
         &token_account_pk,
         &mint,
         &config,
-        &spl_token_2022::ID,
+        &spl_token_2022_interface::ID,
         &token_account_owner_pk,
         false,
         |pubkey| {
@@ -626,7 +625,7 @@ async fn process_create_ata_and_thaw_permissionless(
     let token_account_pk = get_associated_token_address_with_program_id(
         &token_account_owner_pk,
         &mint,
-        &spl_token_2022::ID,
+        &spl_token_2022_interface::ID,
     );
 
     println!("mint: {:?}", mint);

@@ -73,13 +73,19 @@ impl CreateConfig<'_> {
             self.mint_config.key,
             MintConfig::LEN as u64,
         );
-        invoke_signed(&allocate_ix, &[self.payer.clone(), self.mint_config.clone()], &[&seeds])?;
+        invoke_signed(
+            &allocate_ix,
+            &[self.payer.clone(), self.mint_config.clone()],
+            &[&seeds],
+        )?;
 
-        let assign_ix = solana_system_interface::instruction::assign(
-            self.mint_config.key,
-            &crate::ID,
-        );
-        invoke_signed(&assign_ix, &[self.payer.clone(), self.mint_config.clone()], &[&seeds])?;
+        let assign_ix =
+            solana_system_interface::instruction::assign(self.mint_config.key, &crate::ID);
+        invoke_signed(
+            &assign_ix,
+            &[self.payer.clone(), self.mint_config.clone()],
+            &[&seeds],
+        )?;
 
         let data = &mut self.mint_config.data.borrow_mut();
         let config = pod_from_bytes_mut::<MintConfig>(data)?;

@@ -2,7 +2,7 @@ pub mod program_test;
 use solana_sdk::{
     program_option::COption, signature::Keypair, signer::Signer, transaction::Transaction,
 };
-use spl_token_2022::{
+use spl_token_2022_interface::{
     extension::StateWithExtensions,
     state::{Account, AccountState, Mint},
     ID as TOKEN_PROGRAM_ID,

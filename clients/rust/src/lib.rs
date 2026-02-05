@@ -10,15 +10,15 @@ use solana_client::nonblocking;
 use solana_instruction::Instruction;
 use solana_program_error::ProgramError;
 use solana_program_option::COption;
+use solana_program_pack::Pack;
 use solana_pubkey::Pubkey;
-use solana_sdk::program_pack::Pack;
 use spl_associated_token_account_interface::address::get_associated_token_address_with_program_id;
 use spl_associated_token_account_interface::instruction::{
     create_associated_token_account, create_associated_token_account_idempotent,
 };
 pub use spl_tlv_account_resolution::state::{AccountDataResult, AccountFetchError};
-use spl_token_client::spl_token_2022;
-use spl_token_client::spl_token_2022::state::{Account, AccountState};
+use spl_token_2022_interface::state::{Account, AccountState};
+use spl_token_2022_interface::ID as SPL_TOKEN_2022_ID;
 
 use crate::generated::errors::token_acl::TokenAclError;
 
@@ -178,7 +178,7 @@ pub async fn create_ata_and_thaw_permissionless(
     create_ata_and_thaw_permissionless_instructions(
         payer_pubkey,
         mint_pubkey,
-        &spl_token_2022::ID,
+        &SPL_TOKEN_2022_ID,
         token_account_owner_pubkey,
         idempotent,
         &fetch_account_data_fn,
@@ -202,7 +202,7 @@ where
     let token_account = get_associated_token_address_with_program_id(
         &token_account_owner_pubkey,
         &mint_pubkey,
-        &spl_token_2022::ID,
+        &SPL_TOKEN_2022_ID,
     );
 
     let ix = if idempotent {
@@ -210,14 +210,14 @@ where
             &payer_pubkey,
             &token_account_owner_pubkey,
             &mint_pubkey,
-            &spl_token_2022::ID,
+            &SPL_TOKEN_2022_ID,
         )
     } else {
         create_associated_token_account(
             &payer_pubkey,
             &token_account_owner_pubkey,
             &mint_pubkey,
-            &spl_token_2022::ID,
+            &SPL_TOKEN_2022_ID,
         )
     };
     let mut instructions = vec![ix];

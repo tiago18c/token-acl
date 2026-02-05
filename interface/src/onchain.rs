@@ -29,7 +29,13 @@ pub fn invoke_can_thaw_permissionless<'a>(
 
     let validation_pubkey = get_thaw_extra_account_metas_address(mint.key, program_id);
 
-    let mut cpi_account_infos = vec![signer, token_account, mint, token_account_owner, flag_account];
+    let mut cpi_account_infos = vec![
+        signer,
+        token_account,
+        mint,
+        token_account_owner,
+        flag_account,
+    ];
 
     if let Some(validation_info) = additional_accounts
         .iter()
@@ -72,7 +78,13 @@ pub fn invoke_can_freeze_permissionless<'a>(
     );
 
     let validation_pubkey = get_freeze_extra_account_metas_address(mint.key, program_id);
-    let mut cpi_account_infos = vec![signer, token_account, mint, token_account_owner, flag_account];
+    let mut cpi_account_infos = vec![
+        signer,
+        token_account,
+        mint,
+        token_account_owner,
+        flag_account,
+    ];
 
     if let Some(validation_info) = additional_accounts
         .iter()

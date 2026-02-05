@@ -30,9 +30,16 @@ impl DeleteConfig<'_> {
         // this also ensures that the mint still exists and is initialized
         let mint_data = self.mint.data.borrow_mut();
         let mint = PodStateWithExtensions::<PodMint>::unpack(&mint_data);
-        let set_freeze_authority = mint.and_then(|mint| Ok(mint.base.freeze_authority.unwrap_or(Pubkey::default()) == *self.mint_config.key)).unwrap_or(false);
+        let set_freeze_authority = mint
+            .and_then(|mint| {
+                Ok(
+                    mint.base.freeze_authority.unwrap_or(Pubkey::default())
+                        == *self.mint_config.key,
+                )
+            })
+            .unwrap_or(false);
         drop(mint_data);
-         
+
         let bump_seed = {
             let data = &mut self.mint_config.data.borrow_mut();
             let config = load_mint_config(data)?;

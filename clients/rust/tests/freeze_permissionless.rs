@@ -7,9 +7,10 @@ use solana_sdk::{
     transaction::{Transaction, TransactionError},
 };
 use spl_associated_token_account_interface::address::get_associated_token_address_with_program_id;
-use spl_token_2022::{
+use spl_token_2022_interface::{
     extension::StateWithExtensions,
     state::{Account, AccountState},
+    ID as TOKEN_PROGRAM_ID,
 };
 
 use crate::program_test::TestContext;
@@ -174,7 +175,7 @@ async fn test_freeze_permissionless_always_block() {
         &user_token_account,
         &tc.token.mint,
         &mint_cfg_pk,
-        &spl_token_2022::ID,
+        &TOKEN_PROGRAM_ID,
         &user_pubkey,
         false,
         |pubkey| {
@@ -280,7 +281,7 @@ async fn test_freeze_permissionless_always_allow_with_deps() {
         .mint_config(mint_cfg_pk)
         .token_account(user_token_account)
         .token_account_owner(user_pubkey)
-        .token_program(spl_token_2022::ID)
+        .token_program(TOKEN_PROGRAM_ID)
         .gating_program(program_test::AA_WD_ID)
         .system_program(solana_system_interface::program::ID)
         .flag_account(flag_account)
@@ -314,7 +315,7 @@ async fn test_freeze_permissionless_always_allow_with_deps() {
     let ata = get_associated_token_address_with_program_id(
         &user_pubkey,
         &tc.token.mint,
-        &spl_token_2022::ID,
+        &TOKEN_PROGRAM_ID,
     );
 
     println!("ata: {:?}", ata);
@@ -322,7 +323,7 @@ async fn test_freeze_permissionless_always_allow_with_deps() {
     println!("user_pubkey: {:?}", user_pubkey);
     println!("user_token_account: {:?}", user_token_account);
     println!("tc.token.mint: {:?}", tc.token.mint);
-    println!("spl_token_2022::ID: {:?}", spl_token_2022::ID);
+    println!("TOKEN_PROGRAM_ID: {:?}", TOKEN_PROGRAM_ID);
     println!("extra_account_metas: {:?}", extra_account_metas_address);
     println!(
         "account: {:?}",
@@ -337,7 +338,7 @@ async fn test_freeze_permissionless_always_allow_with_deps() {
         &user_token_account,
         &tc.token.mint,
         &mint_cfg_pk,
-        &spl_token_2022::ID,
+        &TOKEN_PROGRAM_ID,
         &user_pubkey,
         false,
         |pubkey| {

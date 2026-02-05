@@ -76,7 +76,7 @@ impl InitializeExtraMetas<'_> {
                 false,
             )?,
             // [7] token program
-            ExtraAccountMeta::new_with_pubkey(&spl_token_2022::ID, false, false)?,
+            ExtraAccountMeta::new_with_pubkey(&spl_token_2022_interface::ID, false, false)?,
             // [8] token account owner
             ExtraAccountMeta::new_with_pubkey_data(
                 &PubkeyData::AccountData {
@@ -117,7 +117,7 @@ impl InitializeExtraMetas<'_> {
                 false,
             )?,
             // [7] token program
-            ExtraAccountMeta::new_with_pubkey(&spl_token_2022::ID, false, false)?,
+            ExtraAccountMeta::new_with_pubkey(&spl_token_2022_interface::ID, false, false)?,
             // [8] token account owner
             ExtraAccountMeta::new_with_pubkey_data(
                 &PubkeyData::AccountData {

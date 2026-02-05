@@ -2,9 +2,10 @@ use std::str::FromStr;
 
 use solana_instruction::Instruction;
 use solana_pubkey::Pubkey;
-use spl_token_client::spl_token_2022::{
+use spl_token_2022_interface::{
     extension::{BaseStateWithExtensions, PodStateWithExtensions},
     pod::PodMint,
+    ID as SPL_TOKEN_2022_ID,
 };
 use spl_token_metadata_interface::state::{Field, TokenMetadata};
 use token_acl_interface::error::ThawFreezeGateError;
@@ -17,7 +18,7 @@ pub fn set_mint_tacl_metadata_ix(
     gating_program: &Pubkey,
 ) -> Instruction {
     spl_token_metadata_interface::instruction::update_field(
-        &spl_token_client::spl_token_2022::ID,
+        &SPL_TOKEN_2022_ID,
         mint,
         metadata_authority,
         Field::Key(TOKEN_ACL_METADATA_KEY.to_string()),
