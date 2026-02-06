@@ -12,7 +12,6 @@ test-sbf = []
 forbid-additional-mints = []
 
 [dependencies]
-arrayref = "0.3.9"
 solana-program = { workspace = true }
 solana-rent = { workspace = true }
 solana-cpi = { workspace = true }
@@ -20,17 +19,10 @@ solana-system-interface = { workspace = true }
 solana-sysvar = { workspace = true }
 solana-program-error = { workspace = true }
 spl-discriminator = { workspace = true }
-spl-pod = { workspace = true }
 spl-tlv-account-resolution = { workspace = true }
 token-acl-interface = { workspace = true }
-spl-type-length-value = { workspace = true }
-spl-associated-token-account-client = { workspace = true }
-bytemuck = { version = "1.21.0", features = ["derive"] }
-solana-msg = { workspace = true }
-spl-token-2022 = { workspace = true }
-
-[dev-dependencies]
-solana-sdk = "2.3.1"
+spl-associated-token-account-interface = { workspace = true }
+spl-token-2022-interface = { workspace = true }
 
 [lib]
 crate-type = ["cdylib", "lib"]

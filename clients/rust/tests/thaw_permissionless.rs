@@ -9,11 +9,11 @@ use solana_sdk::{
     transaction::{Transaction, TransactionError},
 };
 use solana_system_interface::program::ID as SYSTEM_PROGRAM_ID;
-use spl_associated_token_account_client::{
+use spl_associated_token_account_interface::{
     address::get_associated_token_address_with_program_id,
     instruction::create_associated_token_account_idempotent,
 };
-use spl_token_2022::{
+use spl_token_2022_interface::{
     extension::StateWithExtensions,
     state::{Account, AccountState, Mint},
     ID as TOKEN_PROGRAM_ID,
@@ -186,14 +186,14 @@ async fn test_create_ata_and_thaw_permissionless() {
     let token_account = get_associated_token_address_with_program_id(
         &user_pubkey,
         &tc.token.mint,
-        &spl_token_2022::ID,
+        &TOKEN_PROGRAM_ID,
     );
 
     let ix = create_associated_token_account_idempotent(
         &user_pubkey,
         &user_pubkey,
         &tc.token.mint,
-        &spl_token_2022::ID,
+        &TOKEN_PROGRAM_ID,
     );
     instructions.push(ix);
 
@@ -217,7 +217,7 @@ async fn test_create_ata_and_thaw_permissionless() {
         &token_account,
         &tc.token.mint,
         &mint_cfg_pk,
-        &spl_token_2022::ID,
+        &TOKEN_PROGRAM_ID,
         &user_pubkey,
         false,
         |pubkey| {
@@ -275,7 +275,7 @@ async fn test_create_ata_and_thaw_permissionless() {
         &token_account,
         &tc.token.mint,
         &mint_cfg_pk,
-        &spl_token_2022::ID,
+        &TOKEN_PROGRAM_ID,
         &user_pubkey,
         true,
         |pubkey| {
@@ -367,7 +367,7 @@ async fn test_thaw_permissionless_always_block() {
         &user_token_account,
         &tc.token.mint,
         &mint_cfg_pk,
-        &spl_token_2022::ID,
+        &TOKEN_PROGRAM_ID,
         &user_pubkey,
         false,
         |pubkey| {
@@ -467,7 +467,7 @@ async fn test_thaw_permissionless_always_allow_with_deps() {
         .mint_config(mint_cfg_pk)
         .token_account(user_token_account)
         .token_account_owner(user_pubkey)
-        .token_program(spl_token_2022::ID)
+        .token_program(TOKEN_PROGRAM_ID)
         .gating_program(program_test::AA_WD_ID)
         .system_program(solana_system_interface::program::ID)
         .flag_account(flag_account)
@@ -501,7 +501,7 @@ async fn test_thaw_permissionless_always_allow_with_deps() {
     let ata = get_associated_token_address_with_program_id(
         &user_pubkey,
         &tc.token.mint,
-        &spl_token_2022::ID,
+        &TOKEN_PROGRAM_ID,
     );
 
     println!("ata: {:?}", ata);
@@ -509,7 +509,7 @@ async fn test_thaw_permissionless_always_allow_with_deps() {
     println!("user_pubkey: {:?}", user_pubkey);
     println!("user_token_account: {:?}", user_token_account);
     println!("tc.token.mint: {:?}", tc.token.mint);
-    println!("spl_token_2022::ID: {:?}", spl_token_2022::ID);
+    println!("TOKEN_PROGRAM_ID: {:?}", TOKEN_PROGRAM_ID);
     println!("extra_account_metas: {:?}", extra_account_metas_address);
     println!(
         "account: {:?}",
@@ -527,7 +527,7 @@ async fn test_thaw_permissionless_always_allow_with_deps() {
         &user_token_account,
         &tc.token.mint,
         &mint_cfg_pk,
-        &spl_token_2022::ID,
+        &TOKEN_PROGRAM_ID,
         &user_pubkey,
         false,
         |pubkey| {

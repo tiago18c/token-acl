@@ -5,14 +5,7 @@ repository = { workspace = true }
 license = { workspace = true }
 edition = { workspace = true }
 
-[features]
-default = []
-no-entrypoint = []
-test-sbf = []
-forbid-additional-mints = []
-
 [dependencies]
-arrayref = "0.3.9"
 solana-program = { workspace = true }
 solana-rent = { workspace = true }
 solana-cpi = { workspace = true }
@@ -20,14 +13,8 @@ solana-system-interface = { workspace = true }
 solana-sysvar = { workspace = true }
 solana-program-error = { workspace = true }
 spl-discriminator = { workspace = true }
-spl-pod = { workspace = true }
 spl-tlv-account-resolution = { workspace = true }
 token-acl-interface = { workspace = true }
-spl-type-length-value = { workspace = true }
-bytemuck = { version = "1.21.0", features = ["derive"] }
-
-[dev-dependencies]
-solana-sdk = "2.2.1"
 
 [lib]
 crate-type = ["cdylib", "lib"]

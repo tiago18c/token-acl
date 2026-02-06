@@ -6,7 +6,7 @@ use solana_sdk::{
     transaction::{Transaction, TransactionError},
 };
 use solana_system_interface::program::ID as SYSTEM_PROGRAM_ID;
-use spl_token_2022::ID as TOKEN_PROGRAM_ID;
+use spl_token_2022_interface::ID as TOKEN_PROGRAM_ID;
 
 use crate::program_test::TestContext;
 

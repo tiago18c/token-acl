@@ -32,8 +32,8 @@ import {
   type FixedSizeEncoder,
   type MaybeAccount,
   type MaybeEncodedAccount,
-} from '@solana/kit';
-import { findMintConfigPda, MintConfigSeeds } from '../pdas';
+} from "@solana/kit";
+import { findMintConfigPda, MintConfigSeeds } from "../pdas";
 
 export const MINT_CONFIG_DISCRIMINATOR = 1;
 
@@ -60,33 +60,36 @@ export type MintConfigArgs = {
   gatingProgram: Address;
 };
 
+/** Gets the encoder for {@link MintConfigArgs} account data. */
 export function getMintConfigEncoder(): FixedSizeEncoder<MintConfigArgs> {
   return transformEncoder(
     getStructEncoder([
-      ['discriminator', getU8Encoder()],
-      ['bump', getU8Encoder()],
-      ['enablePermissionlessThaw', getBooleanEncoder()],
-      ['enablePermissionlessFreeze', getBooleanEncoder()],
-      ['mint', getAddressEncoder()],
-      ['freezeAuthority', getAddressEncoder()],
-      ['gatingProgram', getAddressEncoder()],
+      ["discriminator", getU8Encoder()],
+      ["bump", getU8Encoder()],
+      ["enablePermissionlessThaw", getBooleanEncoder()],
+      ["enablePermissionlessFreeze", getBooleanEncoder()],
+      ["mint", getAddressEncoder()],
+      ["freezeAuthority", getAddressEncoder()],
+      ["gatingProgram", getAddressEncoder()],
     ]),
-    (value) => ({ ...value, discriminator: MINT_CONFIG_DISCRIMINATOR })
+    (value) => ({ ...value, discriminator: MINT_CONFIG_DISCRIMINATOR }),
   );
 }
 
+/** Gets the decoder for {@link MintConfig} account data. */
 export function getMintConfigDecoder(): FixedSizeDecoder<MintConfig> {
   return getStructDecoder([
-    ['discriminator', getU8Decoder()],
-    ['bump', getU8Decoder()],
-    ['enablePermissionlessThaw', getBooleanDecoder()],
-    ['enablePermissionlessFreeze', getBooleanDecoder()],
-    ['mint', getAddressDecoder()],
-    ['freezeAuthority', getAddressDecoder()],
-    ['gatingProgram', getAddressDecoder()],
+    ["discriminator", getU8Decoder()],
+    ["bump", getU8Decoder()],
+    ["enablePermissionlessThaw", getBooleanDecoder()],
+    ["enablePermissionlessFreeze", getBooleanDecoder()],
+    ["mint", getAddressDecoder()],
+    ["freezeAuthority", getAddressDecoder()],
+    ["gatingProgram", getAddressDecoder()],
   ]);
 }
 
+/** Gets the codec for {@link MintConfig} account data. */
 export function getMintConfigCodec(): FixedSizeCodec<
   MintConfigArgs,
   MintConfig
@@ -95,24 +98,24 @@ export function getMintConfigCodec(): FixedSizeCodec<
 }
 
 export function decodeMintConfig<TAddress extends string = string>(
-  encodedAccount: EncodedAccount<TAddress>
+  encodedAccount: EncodedAccount<TAddress>,
 ): Account<MintConfig, TAddress>;
 export function decodeMintConfig<TAddress extends string = string>(
-  encodedAccount: MaybeEncodedAccount<TAddress>
+  encodedAccount: MaybeEncodedAccount<TAddress>,
 ): MaybeAccount<MintConfig, TAddress>;
 export function decodeMintConfig<TAddress extends string = string>(
-  encodedAccount: EncodedAccount<TAddress> | MaybeEncodedAccount<TAddress>
+  encodedAccount: EncodedAccount<TAddress> | MaybeEncodedAccount<TAddress>,
 ): Account<MintConfig, TAddress> | MaybeAccount<MintConfig, TAddress> {
   return decodeAccount(
     encodedAccount as MaybeEncodedAccount<TAddress>,
-    getMintConfigDecoder()
+    getMintConfigDecoder(),
   );
 }
 
 export async function fetchMintConfig<TAddress extends string = string>(
   rpc: Parameters<typeof fetchEncodedAccount>[0],
   address: Address<TAddress>,
-  config?: FetchAccountConfig
+  config?: FetchAccountConfig,
 ): Promise<Account<MintConfig, TAddress>> {
   const maybeAccount = await fetchMaybeMintConfig(rpc, address, config);
   assertAccountExists(maybeAccount);
@@ -122,7 +125,7 @@ export async function fetchMintConfig<TAddress extends string = string>(
 export async function fetchMaybeMintConfig<TAddress extends string = string>(
   rpc: Parameters<typeof fetchEncodedAccount>[0],
   address: Address<TAddress>,
-  config?: FetchAccountConfig
+  config?: FetchAccountConfig,
 ): Promise<MaybeAccount<MintConfig, TAddress>> {
   const maybeAccount = await fetchEncodedAccount(rpc, address, config);
   return decodeMintConfig(maybeAccount);
@@ -131,7 +134,7 @@ export async function fetchMaybeMintConfig<TAddress extends string = string>(
 export async function fetchAllMintConfig(
   rpc: Parameters<typeof fetchEncodedAccounts>[0],
   addresses: Array<Address>,
-  config?: FetchAccountsConfig
+  config?: FetchAccountsConfig,
 ): Promise<Account<MintConfig>[]> {
   const maybeAccounts = await fetchAllMaybeMintConfig(rpc, addresses, config);
   assertAccountsExist(maybeAccounts);
@@ -141,7 +144,7 @@ export async function fetchAllMintConfig(
 export async function fetchAllMaybeMintConfig(
   rpc: Parameters<typeof fetchEncodedAccounts>[0],
   addresses: Array<Address>,
-  config?: FetchAccountsConfig
+  config?: FetchAccountsConfig,
 ): Promise<MaybeAccount<MintConfig>[]> {
   const maybeAccounts = await fetchEncodedAccounts(rpc, addresses, config);
   return maybeAccounts.map((maybeAccount) => decodeMintConfig(maybeAccount));
@@ -154,7 +157,7 @@ export function getMintConfigSize(): number {
 export async function fetchMintConfigFromSeeds(
   rpc: Parameters<typeof fetchEncodedAccount>[0],
   seeds: MintConfigSeeds,
-  config: FetchAccountConfig & { programAddress?: Address } = {}
+  config: FetchAccountConfig & { programAddress?: Address } = {},
 ): Promise<Account<MintConfig>> {
   const maybeAccount = await fetchMaybeMintConfigFromSeeds(rpc, seeds, config);
   assertAccountExists(maybeAccount);
@@ -164,7 +167,7 @@ export async function fetchMintConfigFromSeeds(
 export async function fetchMaybeMintConfigFromSeeds(
   rpc: Parameters<typeof fetchEncodedAccount>[0],
   seeds: MintConfigSeeds,
-  config: FetchAccountConfig & { programAddress?: Address } = {}
+  config: FetchAccountConfig & { programAddress?: Address } = {},
 ): Promise<MaybeAccount<MintConfig>> {
   const { programAddress, ...fetchConfig } = config;
   const [address] = await findMintConfigPda(seeds, { programAddress });

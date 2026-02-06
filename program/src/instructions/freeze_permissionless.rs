@@ -47,7 +47,6 @@ impl FreezePermissionless<'_> {
             let ta_data = self.token_account.data.borrow();
             let ta = StateWithExtensions::<spl_token_2022::state::Account>::unpack(&ta_data)?;
 
-
             if ta.base.owner != *self.token_account_owner.key {
                 return Err(TokenAclError::InvalidTokenAccountOwner.into());
             }
@@ -118,7 +117,7 @@ impl FreezePermissionless<'_> {
 
         // clean up flag account
         self.flag_account.data.borrow_mut()[0] = 0;
-        self.flag_account.realloc(0, false)?;
+        self.flag_account.resize(0)?;
         self.flag_account.assign(&Pubkey::default());
         **self.authority.try_borrow_mut_lamports()? += self.flag_account.lamports();
         **self.flag_account.try_borrow_mut_lamports()? = 0;
@@ -144,7 +143,7 @@ impl<'a> TryFrom<&'a [AccountInfo<'a>]> for FreezePermissionless<'a> {
         if !spl_token_2022::check_id(token_program.key) {
             return Err(TokenAclError::InvalidTokenProgram.into());
         }
-        
+
         if !solana_system_interface::program::check_id(system_program.key) {
             return Err(TokenAclError::InvalidSystemProgram.into());
         }

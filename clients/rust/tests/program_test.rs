@@ -5,13 +5,18 @@ use solana_sdk::transaction::Transaction;
 use solana_sdk::{signature::Keypair, signer::Signer};
 use solana_system_interface::instruction::create_account;
 use solana_system_interface::program::ID;
-use spl_associated_token_account_client::address::get_associated_token_address_with_program_id;
-use spl_associated_token_account_client::instruction::create_associated_token_account;
-use spl_token_2022::extension::default_account_state::instruction::initialize_default_account_state;
-use spl_token_2022::extension::metadata_pointer::instruction::initialize;
-use spl_token_2022::extension::ExtensionType;
-use spl_token_2022::instruction::{initialize_mint2, initialize_mint_close_authority};
-use spl_token_2022::state::{AccountState, Mint};
+use spl_associated_token_account_interface::address::get_associated_token_address_with_program_id;
+use spl_associated_token_account_interface::instruction::create_associated_token_account;
+use spl_token_2022_interface::{
+    extension::{
+        default_account_state::instruction::initialize_default_account_state,
+        metadata_pointer::instruction::initialize, ExtensionType,
+    },
+    instruction::{initialize_mint2, initialize_mint_close_authority},
+    state::{AccountState, Mint},
+    ID as TOKEN_PROGRAM_ID,
+};
+
 use token_acl_client::set_mint_tacl_metadata_ix;
 
 pub const AA_ID: Pubkey = Pubkey::from_str_const("Eba1ts11111111111111111111111111111111111112");
@@ -89,7 +94,7 @@ impl TestContext {
         .unwrap();
         let mint_kp = Keypair::new();
         let mint_pk = mint_kp.pubkey();
-        let token_program_id = &spl_token_2022::ID;
+        let token_program_id = &TOKEN_PROGRAM_ID;
         let payer_pk = auth.pubkey();
 
         let ix1 = create_account(
@@ -151,7 +156,7 @@ impl TestContext {
         mint: &Pubkey,
         owner: &Keypair,
     ) -> Pubkey {
-        let token_program_id = &spl_token_2022::ID;
+        let token_program_id = &TOKEN_PROGRAM_ID;
         let payer_pk = owner.pubkey();
 
         let res = vm.airdrop(&payer_pk, 1_000_000_000);
@@ -216,7 +221,7 @@ impl TestContext {
             .mint_config(mint_cfg_pk)
             .payer(self.token.auth.pubkey())
             .system_program(ID)
-            .token_program(spl_token_2022::ID)
+            .token_program(TOKEN_PROGRAM_ID)
             .instruction();
 
         let set_metadata_ix =
@@ -236,8 +241,8 @@ impl TestContext {
     }
 
     pub fn close_mint(&mut self) {
-        let ix = spl_token_2022::instruction::close_account(
-            &spl_token_2022::ID,
+        let ix = spl_token_2022_interface::instruction::close_account(
+            &TOKEN_PROGRAM_ID,
             &self.token.mint,
             &self.token.auth.pubkey(),
             &self.token.auth.pubkey(),
@@ -305,7 +310,7 @@ impl TestContext {
             .mint(self.token.mint)
             .mint_config(token_acl_client::accounts::MintConfig::find_pda(&self.token.mint).0)
             .token_account(*token_account)
-            .token_program(spl_token_2022::ID)
+            .token_program(TOKEN_PROGRAM_ID)
             .instruction();
 
         let tx = Transaction::new_signed_with_payer(
@@ -324,7 +329,7 @@ impl TestContext {
             .mint(self.token.mint)
             .mint_config(token_acl_client::accounts::MintConfig::find_pda(&self.token.mint).0)
             .token_account(*token_account)
-            .token_program(spl_token_2022::ID)
+            .token_program(TOKEN_PROGRAM_ID)
             .instruction();
 
         let tx = Transaction::new_signed_with_payer(
