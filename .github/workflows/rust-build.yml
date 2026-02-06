@@ -1,4 +1,4 @@
-name: Rust Integration Tests
+name: Rust Checks
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
 
 jobs:
   build:
-    name: Build and test Token-ACL program
+    name: Run Rust checks
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -22,8 +22,8 @@ jobs:
         uses: ./.github/workflows/actions/install-dependencies
         with:
           solana_version: "3.0.14"
-          rustfmt: true
-          clippy: true
+          rust-components: "rustfmt, clippy"
+          install-rust: true
 
       - name: Run format check
         run: cargo fmt --all --check
