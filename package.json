@@ -4,6 +4,7 @@
       "example:always-allow:build": "zx ./scripts/rust/build-sbf.mjs examples/always-allow",
       "example:always-block:build": "zx ./scripts/rust/build-sbf.mjs examples/always-block",
       "example:always-allow-with-deps:build": "zx ./scripts/rust/build-sbf.mjs examples/always-allow-with-deps",
+      "example:build": "pnpm example:always-allow:build && pnpm example:always-block:build && pnpm example:always-allow-with-deps:build",
       "programs:build": "zx ./scripts/rust/build-sbf.mjs program",
       "programs:test": "zx ./scripts/rust/test-sbf.mjs program",
       "programs:format": "zx ./scripts/rust/format.mjs program",
