@@ -1,0 +1,178 @@
+name: Publish Rust Crates
+
+on:
+  workflow_dispatch:
+    inputs:
+      publish-to-crates-io:
+        description: 'Publish to crates.io registry'
+        required: true
+        default: true
+        type: boolean
+      create-github-release:
+        description: 'Create GitHub release'
+        required: true
+        default: true
+        type: boolean
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-rust
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Publish Token-ACL crates to crates.io
+    runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Install Dependencies
+        uses: ./.github/workflows/actions/install-dependencies
+        with:
+          solana_version: "3.0.14"
+          rust-components: "rustfmt, clippy"
+          install-rust: true
+
+      - name: Run format check
+        run: cargo fmt --all --check
+
+      - name: Build Token-ACL program
+        run: pnpm run programs:build
+
+      - name: Build test programs
+        run: pnpm run example:build
+
+      - name: Copy test artifacts to test fixtures
+        run: pnpm run copy:test:fixtures
+
+      - name: Run integration tests
+        run: pnpm run clients:rust:test
+
+      - name: Build CLI
+        run : cargo build --package token-acl-cli
+
+      - name: Get current version
+        id: version
+        run: |
+          VERSION=$(grep "^version" Cargo.toml | head -1 | sed 's/version = "\(.*\)"/\1/')
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "📦 Token-ACL v$VERSION"
+
+      - name: Create and push git tags
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag "v${{ steps.version.outputs.version }}"
+          git push origin --tags
+
+      - name: Authenticate with crates.io
+        uses: rust-lang/crates-io-auth-action@v1
+        id: auth
+
+      - name: Publish token-acl-interface to crates.io
+        if: ${{ github.event.inputs.publish-to-crates-io == 'true' }}
+        run: |
+          echo "📦 Publishing token-acl-interface@${{ steps.version.outputs.version }} to crates.io..."
+          cargo publish -p token-acl-interface --locked
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ steps.auth.outputs.token }}
+
+      - name: Wait for token-acl-interface to be available on crates.io
+        if: ${{ github.event.inputs.publish-to-crates-io == 'true' }}
+        run: |
+          echo "Waiting 30 seconds for crates.io to index token-acl-interface..."
+          sleep 30
+
+      - name: Publish token-acl to crates.io
+        if: ${{ github.event.inputs.publish-to-crates-io == 'true' }}
+        run: |
+          echo "📦 Publishing token-acl@${{ steps.version.outputs.version }} to crates.io..."
+          cargo publish -p token-acl --locked
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ steps.auth.outputs.token }}
+
+      - name: Publish token-acl-client to crates.io
+        if: ${{ github.event.inputs.publish-to-crates-io == 'true' }}
+        run: |
+          echo "📦 Publishing token-acl-client@${{ steps.version.outputs.version }} to crates.io..."
+          cargo publish -p token-acl-client --locked
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ steps.auth.outputs.token }}
+
+      - name: Wait for token-acl-client to be available on crates.io
+        if: ${{ github.event.inputs.publish-to-crates-io == 'true' }}
+        run: |
+          echo "Waiting 30 seconds for crates.io to index token-acl-client..."
+          sleep 30
+
+      - name: Publish token-acl-cli to crates.io
+        if: ${{ github.event.inputs.publish-to-crates-io == 'true' }}
+        run: |
+          echo "📦 Publishing token-acl-cli@${{ steps.version.outputs.version }} to crates.io..."
+          cargo publish -p token-acl-cli --locked
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ steps.auth.outputs.token }}
+
+      - name: Create GitHub Release
+        if: ${{ github.event.inputs.create-github-release == 'true' }}
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const tagName = `v${{ steps.version.outputs.version }}`;
+            const releaseName = `Token-ACL v${{ steps.version.outputs.version }}`;
+
+            await github.rest.repos.createRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag_name: tagName,
+              name: releaseName,
+              body: `Release of Token-ACL v${{ steps.version.outputs.version }}\n\n**Crates:**\n- token-acl-interface v${{ steps.version.outputs.version }}\n- token-acl v${{ steps.version.outputs.version }}\n- token-acl-client v${{ steps.version.outputs.version }}\n- token-acl-cli v${{ steps.version.outputs.version }}`,
+              draft: false,
+              prerelease: false,
+            });
+
+            console.log(`✅ Created release: ${releaseName}`);
+
+      - name: Publish summary
+        run: |
+          echo "## 🎉 Token-ACL Crates Published" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Version**: \`${{ steps.version.outputs.version }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Crates**:" >> $GITHUB_STEP_SUMMARY
+          echo "- \`token-acl-interface\`" >> $GITHUB_STEP_SUMMARY
+          echo "- \`token-acl\`" >> $GITHUB_STEP_SUMMARY
+          echo "- \`token-acl-client\`" >> $GITHUB_STEP_SUMMARY
+          echo "- \`token-acl-cli\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Tags**:" >> $GITHUB_STEP_SUMMARY
+          echo "- \`v${{ steps.version.outputs.version }}\` (generic)" >> $GITHUB_STEP_SUMMARY
+          echo "- \`token-acl-interface-v${{ steps.version.outputs.version }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- \`token-acl-v${{ steps.version.outputs.version }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- \`token-acl-client-v${{ steps.version.outputs.version }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- \`token-acl-cli-v${{ steps.version.outputs.version }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ github.event.inputs.publish-to-crates-io }}" == "true" ]; then
+            echo "✅ Published to crates.io:" >> $GITHUB_STEP_SUMMARY
+            echo "- https://crates.io/crates/token-acl-interface/${{ steps.version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+            echo "- https://crates.io/crates/token-acl/${{ steps.version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+            echo "- https://crates.io/crates/token-acl-client/${{ steps.version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+            echo "- https://crates.io/crates/token-acl-cli/${{ steps.version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "⏭️ Skipped crates.io publish (dry run)" >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ github.event.inputs.create-github-release }}" == "true" ]; then
+            echo "✅ GitHub release created: https://github.com/${{ github.repository }}/releases/tag/v${{ steps.version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "⏭️ Skipped GitHub release creation" >> $GITHUB_STEP_SUMMARY
+          fi

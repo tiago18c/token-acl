@@ -1,0 +1,44 @@
+name: Rust Checks
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+
+jobs:
+  build:
+    name: Run Rust checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Install Dependencies
+        uses: ./.github/workflows/actions/install-dependencies
+        with:
+          solana_version: "3.0.14"
+          rust-components: "rustfmt, clippy"
+          install-rust: true
+
+      - name: Run format check
+        run: cargo fmt --all --check
+
+      - name: Build Token-ACL program
+        run: pnpm run programs:build
+
+      - name: Build test programs
+        run: pnpm run example:build
+
+      - name: Copy test artifacts to test fixtures
+        run: pnpm run copy:test:fixtures
+
+      - name: Run integration tests
+        run: pnpm run clients:rust:test
+
+      - name: Build CLI
+        run : cargo build --package token-acl-cli

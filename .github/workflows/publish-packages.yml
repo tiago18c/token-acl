@@ -76,7 +76,7 @@ jobs:
         run: |
           pnpm changeset version --snapshot canary
           pnpm build
-          pnpm changeset publish --tag canary --filter @solana/token-helpers
+          pnpm changeset publish --tag canary --filter @solana/token-acl-sdk
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,6 +1,6 @@
 [package]
 name = "token-acl"
-version = "0.1.0"
+version = { workspace = true }
 description = "The Token ACL program"
 repository = { workspace = true }
 license = { workspace = true }

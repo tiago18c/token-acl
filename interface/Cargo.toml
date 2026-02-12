@@ -1,6 +1,6 @@
 [package]
 name = "token-acl-interface"
-version = "0.1.0"
+version = { workspace = true }
 description = "Interface library for Token ACL account resolution."
 repository = { workspace = true }
 license = { workspace = true }

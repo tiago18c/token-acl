@@ -6,15 +6,17 @@ inputs:
     description: Node.js version to install
     default: 'lts/*'
     type: string
-  clippy:
-    description: Install Clippy if `true`. Defaults to `false`.
-    required: false
   purge:
     description: Purge unused directories if `true`. Defaults to `false`.
     required: false
-  rustfmt:
-    description: Install Rustfmt if `true`. Defaults to `false`.
+  rust-components:
+    description: "Rust components to install (comma-separated)"
     required: false
+    default: ""
+  install-rust:
+    description: "Install Rust if `true`. Defaults to `false`."
+    required: false
+    default: false
   solana_version:
     description: "Solana version to install (leave empty to skip)"
     required: false
@@ -38,19 +40,17 @@ runs:
       shell: bash
       run: pnpm install --frozen-lockfile
 
-    - name: Install Rustfmt
-      if: ${{ inputs.rustfmt == 'true' }}
-      uses: dtolnay/rust-toolchain@master
-      with:
-        toolchain: ${{ env.TOOLCHAIN_FORMAT }}
-        components: rustfmt
+    - name: Set Rust version
+      shell: bash
+      run: |
+        echo "RUST_VERSION=1.91.1" >> $GITHUB_ENV
 
-    - name: Install Clippy
-      if: ${{ inputs.clippy == 'true' }}
+    - name: Setup Rust toolchain
+      if: inputs.install-rust == 'true'
       uses: dtolnay/rust-toolchain@master
       with:
-        toolchain: ${{ env.TOOLCHAIN_LINT }}
-        components: clippy
+        components: ${{ inputs.rust-components }}
+        toolchain: ${{ env.RUST_VERSION }}
 
     - name: Setup Solana version environment variable
       if: inputs.solana_version != ''

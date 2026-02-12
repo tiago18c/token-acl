@@ -1,6 +1,6 @@
 [package]
 name = "token-acl-client"
-version = "0.1.0"
+version = { workspace = true }
 description = "A rust library for the Token ACL program with generated client code."
 repository = { workspace = true }
 license = { workspace = true }
@@ -40,7 +40,7 @@ doctest = false
 crate-type = ["cdylib", "lib"]
 
 [features]
-default = ["fetch"]
+default = []
 fetch = ["dep:solana-client"]
 serde = []
 
